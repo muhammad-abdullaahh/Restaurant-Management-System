@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Logging Out";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logging Out...</title>
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f9fafb;">
+        <div style="text-align: center;">
+            <h2 style="color: #111827; font-size: 24px; margin-bottom: 16px;">Logging out...</h2>
+            <p style="color: #6b7280;">Please wait while we sign you out.</p>
+        </div>
+    </div>
+
+    <script>
+        // Save current cart to user-specific storage before logout
+        var currentUser = localStorage.getItem('foodHeaven_current_user');
+        if (currentUser) {
+            var currentCart = localStorage.getItem('foodHeaven_cart');
+            if (currentCart) {
+                localStorage.setItem('foodHeaven_cart_' + currentUser, currentCart);
+                console.log('Saved cart for ' + currentUser);
+            }
+        }
+        
+        // Clear current session cart (but keep user-specific carts)
+        localStorage.removeItem('foodHeaven_cart');
+        localStorage.removeItem('foodHeaven_direct_checkout');
+        localStorage.removeItem('foodHeaven_current_user');
+        
+        // Clear session storage to reset reload flags
+        sessionStorage.clear();
+        
+        // Redirect to login
+        setTimeout(function() {
+            window.location.href = '/Account/Login';
+        }, 500);
+    </script>
+</body>
+</html>

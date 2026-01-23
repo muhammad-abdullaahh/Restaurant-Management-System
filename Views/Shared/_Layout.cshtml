@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FoodHeaven</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="FoodHeaven - Experience culinary excellence with our carefully curated selection of dishes">
+    <meta name="keywords" content="restaurant, food delivery, online ordering, table reservation, gourmet food">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#fcfbf8",
+                        "background-dark": "#221e10",
+                        "text-main": "#1c180d",
+                        "card-light": "#ffffff",
+                        "card-dark": "#2d281a",
+                        "accent-gold": "#D4AF37",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'glow': '0 0 20px rgba(242, 185, 13, 0.2)',
+                        'gold-glow': '0 0 15px rgba(212, 175, 55, 0.4)',
+                    }
+                },
+            },
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    @await RenderSectionAsync("Styles", required: false)
+    
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .fill-current {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white transition-colors duration-200">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        
+        <!-- Global Header -->
+        <header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md transition-colors border-b border-gray-200 dark:border-white/5">
+            <div class="w-full px-10 py-5 flex items-center justify-between">
+                <!-- Left Section: Brand + Navigation -->
+                <div class="flex items-center gap-16">
+                    <!-- Brand -->
+                    <a href="/" class="flex items-center gap-3 group">
+                        <span class="material-symbols-outlined text-primary fill-current text-5xl group-hover:scale-110 transition-transform">restaurant_menu</span>
+                        <h2 class="text-text-main dark:text-white text-4xl font-extrabold tracking-tight">FoodHeaven</h2>
+                    </a>
+
+                    <!-- Desktop Navigation (Visible on md+) -->
+                    <nav class="hidden md:flex items-center gap-12">
+                        <a class="text-text-main dark:text-white font-bold hover:text-primary transition-colors text-lg uppercase tracking-wide" href="/">Home</a>
+                        <a class="text-text-main dark:text-white font-bold hover:text-primary transition-colors text-lg uppercase tracking-wide" href="/Menu">Menu</a>
+                        <a class="text-text-main dark:text-white font-bold hover:text-primary transition-colors text-lg uppercase tracking-wide" href="/Reservation/Create">Reservations</a>
+                        <a class="text-text-main dark:text-white font-bold hover:text-primary transition-colors text-lg uppercase tracking-wide" href="/Contact">Contact</a>
+                        <a class="text-text-main dark:text-white font-bold hover:text-primary transition-colors text-lg uppercase tracking-wide" href="/About">About</a>
+                    </nav>
+                </div>
+
+                <!-- Right Section: Actions -->
+                <div class="flex items-center gap-3 md:gap-8">
+                    <!-- Search (Visible Always) -->
+                    <button onclick="toggleSearch()" class="relative flex size-12 md:size-14 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-main dark:text-white">
+                        <span class="material-symbols-outlined text-2xl md:text-3xl">search</span>
+                    </button>
+                    
+                    <!-- Cart (Hidden on Mobile) -->
+                    <a href="/Order/Cart" class="hidden md:flex relative w-12 h-12 md:w-14 md:h-14 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group">
+                        <span class="material-symbols-outlined text-text-main dark:text-white text-2xl md:text-3xl group-hover:text-primary transition-colors">receipt_long</span>
+                        <span class="cart-count absolute -top-1 -right-1 flex h-6 w-6 md:h-7 md:w-7 items-center justify-center rounded-full bg-primary text-xs md:text-sm font-bold text-text-main shadow-sm hidden">0</span>
+                    </a>
+                    
+                    <div class="hidden md:block h-12 w-px bg-gray-200 dark:bg-white/10"></div>
+                    
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="hidden md:flex items-center gap-6">
+                             @if (User.IsInRole("Admin"))
+                             {
+                                <a href="/Admin/Dashboard" class="font-bold text-primary hover:text-text-main transition-colors">Dashboard</a>
+                             }
+                             
+                             <div class="flex items-center gap-3 pl-6 border-l border-gray-200 dark:border-white/10">
+                                 <div class="text-right hidden xl:block">
+                                     @if (User.IsInRole("Admin"))
+                                     {
+                                        <span class="block text-lg font-bold text-text-main dark:text-white leading-none">@User.Identity.Name</span>
+                                     }
+                                     else
+                                     {
+                                        <a href="/Order/MyOrders" class="block text-lg font-bold text-text-main dark:text-white leading-none hover:text-primary transition-colors">@User.Identity.Name</a>
+                                     }
+                                 </div>
+                                 <a href="/Account/Logout" class="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors" title="Logout">
+                                    <span class="material-symbols-outlined text-[24px]">logout</span>
+                                 </a>
+                             </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="/Account/Login" class="hidden md:flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-lg font-bold text-text-main hover:bg-[#d9a60b] transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0">
+                            Login
+                        </a>
+                    }
+
+                     <!-- Mobile Menu Button (Visible md:hidden) -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden flex w-12 h-12 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-text-main dark:text-white ml-1">
+                        <span class="material-symbols-outlined text-3xl">menu</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Modal -->
+        <div id="search-modal" class="fixed inset-0 z-[110] bg-black/60 backdrop-blur-md hidden items-start justify-center pt-24 opacity-0 transition-opacity duration-300">
+            <div onclick="event.stopPropagation()" class="w-full max-w-4xl bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 mx-4 border border-gray-100 dark:border-white/5 flex flex-col max-h-[80vh]">
+                
+                <!-- Search Header -->
+                <div class="relative flex items-center p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
+                    <span class="material-symbols-outlined text-4xl text-primary mr-4 animate-pulse">search</span>
+                    <input type="text" id="global-search-input" onkeydown="handleSearch(event)" placeholder="What are you craving today?" class="w-full bg-transparent border-none focus:ring-0 text-2xl font-bold text-text-main dark:text-white placeholder-gray-400 px-2 h-16 outline-none" autofocus />
+                    <button onclick="toggleSearch()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors group">
+                        <span class="material-symbols-outlined text-3xl text-gray-400 group-hover:text-red-500 transition-colors">close</span>
+                    </button>
+                </div>
+
+                <!-- Search Suggestions & Content -->
+                <div class="p-8 overflow-y-auto custom-scrollbar">
+                    
+                    <!-- Quick Categories -->
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Quick Categories</h3>
+                        <div class="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+                            <a href="/Menu?category=Starters" class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                                <div class="w-16 h-16 rounded-2xl bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-orange-500/30 group-hover:-translate-y-1">
+                                    <span class="material-symbols-outlined text-3xl">tapas</span>
+                                </div>
+                                <span class="text-sm font-medium text-text-main dark:text-white/80 group-hover:text-primary transition-colors">Starters</span>
+                            </a>
+                            <a href="/Menu?category=Mains" class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                                <div class="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-blue-500/30 group-hover:-translate-y-1">
+                                    <span class="material-symbols-outlined text-3xl">restaurant</span>
+                                </div>
+                                <span class="text-sm font-medium text-text-main dark:text-white/80 group-hover:text-primary transition-colors">Mains</span>
+                            </a>
+                            <a href="/Menu?category=Desserts" class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                                <div class="w-16 h-16 rounded-2xl bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center text-pink-600 dark:text-pink-400 group-hover:bg-pink-500 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-pink-500/30 group-hover:-translate-y-1">
+                                    <span class="material-symbols-outlined text-3xl">cake</span>
+                                </div>
+                                <span class="text-sm font-medium text-text-main dark:text-white/80 group-hover:text-primary transition-colors">Desserts</span>
+                            </a>
+                            <a href="/Menu?category=Drinks" class="flex flex-col items-center gap-2 min-w-[80px] group cursor-pointer">
+                                <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-sm group-hover:shadow-lg group-hover:shadow-purple-500/30 group-hover:-translate-y-1">
+                                    <span class="material-symbols-outlined text-3xl">local_bar</span>
+                                </div>
+                                <span class="text-sm font-medium text-text-main dark:text-white/80 group-hover:text-primary transition-colors">Drinks</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Trending Searches -->
+                    <div>
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Trending Now</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="/Menu?search=Burger" class="px-4 py-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-colors text-text-main dark:text-white font-medium flex items-center gap-2 group">
+                                <span class="material-symbols-outlined text-lg text-gray-400 group-hover:text-black transition-colors">trending_up</span>
+                                Cheese Burger
+                            </a>
+                            <a href="/Menu?search=Pizza" class="px-4 py-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-colors text-text-main dark:text-white font-medium flex items-center gap-2 group">
+                                <span class="material-symbols-outlined text-lg text-gray-400 group-hover:text-black transition-colors">trending_up</span>
+                                Pepperoni Pizza
+                            </a>
+                            <a href="/Menu?search=Pasta" class="px-4 py-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-colors text-text-main dark:text-white font-medium flex items-center gap-2 group">
+                                <span class="material-symbols-outlined text-lg text-gray-400 group-hover:text-black transition-colors">trending_up</span>
+                                Alfredo Pasta
+                            </a>
+                            <a href="/Menu?search=Steak" class="px-4 py-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-colors text-text-main dark:text-white font-medium flex items-center gap-2 group">
+                                <span class="material-symbols-outlined text-lg text-gray-400 group-hover:text-black transition-colors">trending_up</span>
+                                Grilled Steak
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer Hint -->
+                <div class="px-8 py-4 bg-gray-50 dark:bg-white/5 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-xs text-gray-400">
+                    <span>Press <kbd class="px-2 py-1 bg-white dark:bg-black rounded border border-gray-200 dark:border-white/10 mx-1 font-bold">Enter</kbd> to search</span>
+                    <span>Press <kbd class="px-2 py-1 bg-white dark:bg-black rounded border border-gray-200 dark:border-white/10 mx-1 font-bold">Esc</kbd> to close</span>
+                </div>
+            </div>
+            <!-- Click outside to close -->
+            <div class="absolute inset-0 z-[-1]" onclick="toggleSearch()"></div>
+        </div>
+
+        <!-- Scripts -->
+        <script>
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                if (menu) {
+                    if (menu.classList.contains('translate-x-full')) {
+                        menu.classList.remove('translate-x-full');
+                        menu.classList.add('translate-x-0');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        menu.classList.add('translate-x-full');
+                        menu.classList.remove('translate-x-0');
+                        document.body.style.overflow = '';
+                    }
+                }
+            }
+
+            function toggleSearch() {
+                const modal = document.getElementById('search-modal');
+                const input = document.getElementById('global-search-input');
+                if (modal.classList.contains('hidden')) {
+                    modal.classList.remove('hidden');
+                    // Small delay for fade in animations
+                    setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modal.children[0].classList.remove('scale-95');
+                        modal.children[0].classList.add('scale-100');
+                    }, 10);
+                    setTimeout(() => input.focus(), 50);
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    modal.classList.add('opacity-0');
+                    modal.children[0].classList.remove('scale-100');
+                    modal.children[0].classList.add('scale-95');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                    document.body.style.overflow = '';
+                }
+            }
+
+            function handleSearch(event) {
+                if (event.key === 'Enter') {
+                    const query = event.target.value;
+                    if (query && query.trim() !== '') {
+                        window.location.href = '/Menu?search=' + encodeURIComponent(query.trim());
+                    }
+                }
+            }
+
+            // Close button handler for mobile menu
+            document.addEventListener('DOMContentLoaded', () => {
+                const closeBtn = document.getElementById('close-menu-btn');
+                if(closeBtn) {
+                     closeBtn.addEventListener('click', toggleMobileMenu);
+                }
+            });
+        </script>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 z-[100] bg-background-light dark:bg-background-dark transform translate-x-full transition-transform duration-300 md:hidden flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-white/10">
+                 <a href="/" class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary fill-current text-4xl">restaurant_menu</span>
+                    <h2 class="text-text-main dark:text-white text-2xl font-extrabold tracking-tight">FoodHeaven</h2>
+                </a>
+                <button id="close-menu-btn" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-text-main dark:text-white">
+                    <span class="material-symbols-outlined text-3xl">close</span>
+                </button>
+            </div>
+            <nav class="flex flex-col p-8 gap-6 overflow-y-auto">
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors" href="/">Home</a>
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors" href="/Menu">Menu</a>
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors flex items-center justify-between" href="/Order/Cart">
+                    My Cart
+                    <span class="cart-count bg-primary text-text-main text-sm px-3 py-1 rounded-full font-bold shadow-sm hidden">0</span>
+                </a>
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors" href="/Reservation/Create">Reservations</a>
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors" href="/Contact">Contact</a>
+                <a class="text-text-main dark:text-white text-2xl font-bold hover:text-primary transition-colors" href="/About">About</a>
+                <div class="h-px bg-gray-200 dark:bg-white/10 my-2"></div>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                     <div class="flex items-center gap-3 px-2 py-2 bg-gray-50 dark:bg-white/5 rounded-xl">
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black font-bold text-lg">
+                            @User.Identity.Name?.Substring(0, 1).ToUpper()
+                        </div>
+                        <div>
+                             @if (User.IsInRole("Admin"))
+                             {
+                                <span class="block text-text-main dark:text-white font-bold">@User.Identity.Name</span>
+                             }
+                             else
+                             {
+                                <a href="/Order/MyOrders" class="block text-text-main dark:text-white font-bold hover:text-primary">@User.Identity.Name</a>
+                             }
+                        </div>
+                     </div>
+                     
+                      @if (User.IsInRole("Admin"))
+                      {
+                         <a class="text-text-main dark:text-white text-xl font-bold hover:text-primary transition-colors" href="/Admin/Dashboard">Dashboard</a>
+                      }
+                     <a class="text-red-500 text-xl font-bold hover:text-red-600 transition-colors" href="/Account/Logout">Logout</a>
+                }
+                else
+                {
+                     <a class="text-text-main dark:text-white text-xl font-bold hover:text-primary transition-colors" href="/Account/Login">Login / Sign Up</a>
+                }
+            </nav>
+        </div>
+
+        @RenderBody()
+        
+        <!-- Global Footer -->
+        <footer class="bg-[#1a1a1a] text-white pt-20 pb-10 mt-auto border-t border-white/5">
+            <div class="max-w-[1440px] mx-auto px-6 lg:px-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                    <!-- Brand Section -->
+                    <div class="space-y-6">
+                        <a href="/" class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-4xl">restaurant_menu</span>
+                            <span class="text-2xl font-black tracking-tight">FoodHeaven</span>
+                        </a>
+                        <p class="text-gray-400 leading-relaxed max-w-xs">
+                            Experience the symphony of flavors defined by passion, quality, and culinary innovation.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-black transition-all">
+                                <span class="text-lg font-bold">IG</span>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-black transition-all">
+                                <span class="text-lg font-bold">FB</span>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-black transition-all">
+                                <span class="text-lg font-bold">TW</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-6">Explore</h3>
+                        <ul class="space-y-4">
+                            <li><a href="/Menu" class="text-gray-400 hover:text-primary transition-colors">Our Menu</a></li>
+                            <li><a href="/Reservation/Create" class="text-gray-400 hover:text-primary transition-colors">Book a Table</a></li>
+                            <li><a href="/About" class="text-gray-400 hover:text-primary transition-colors">Our Story</a></li>
+                            <li><a href="/Order/Cart" class="text-gray-400 hover:text-primary transition-colors">View Cart</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Us (With Hidden Link) -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-6">Contact Us</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3 text-gray-400">
+                                <span class="material-symbols-outlined text-primary mt-1">location_on</span>
+                                <span>123 Culinary Avenue,<br>Foodie District, FD 90210</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <span class="material-symbols-outlined text-primary">phone</span>
+                                <span>+1 (555) 123-4567</span>
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <span class="material-symbols-outlined text-primary">mail</span>
+                                <span>hello@foodheaven.com</span>
+                            </li>
+                        </ul>
+                        <div class="mt-6 pt-6 border-t border-white/5 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                             <a href="/Admin/Login" class="text-xs text-[#1a1a1a] hover:text-gray-600 cursor-default">Staff Access</a>
+                        </div>
+                    </div>
+
+                    <!-- Working Hours -->
+                    <div>
+                         <h3 class="text-lg font-bold mb-6">Working Hours</h3>
+                         <div class="relative bg-white/5 border border-white/10 rounded-2xl p-6 overflow-hidden group hover:border-primary/30 transition-colors">
+                            <!-- Glow Effect -->
+                            <div class="absolute -top-10 -right-10 w-24 h-24 bg-primary/10 blur-3xl rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
+                            
+                            <!-- Status Indicator (Mocked as Open for visual appeal) -->
+                            <div class="flex items-center justify-between mb-6">
+                                <div id="status-container" class="flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+                                    <span class="relative flex h-2 w-2">
+                                       <span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                       <span id="status-dot" class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </span>
+                                    <span id="status-text" class="text-xs font-bold text-green-400 uppercase tracking-wide">Open Now</span>
+                                </div>
+                                <span class="material-symbols-outlined text-gray-500 group-hover:text-primary transition-colors">schedule</span>
+                            </div>
+                            
+                            <ul class="space-y-4 text-sm text-gray-400 mb-6">
+                                <li class="flex justify-between items-center pb-2 border-b border-white/5">
+                                    <span>Mon - Fri</span>
+                                    <span class="text-white font-body font-medium">11:00 AM - 02:00 AM</span>
+                                </li>
+                                <li class="flex justify-between items-center">
+                                    <span>Sat - Sun</span>
+                                    <span class="text-white font-body font-medium">11:00 AM - 04:00 AM</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="bg-primary/10 rounded-xl p-3 text-center border border-primary/20">
+                                <p class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center justify-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">celebration</span> Happy Hour
+                                </p>
+                                <p class="text-white text-xs font-body">Daily 17:00 - 19:00</p>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <script>
+                    function updateBusinessStatus() {
+                        const now = new Date();
+                        const day = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+                        const hour = now.getHours();
+                        
+                        // Schedule Rules
+                        // Mon(1)-Fri(5): 11am - 2am (next day)
+                        // Sat(6)-Sun(0): 11am - 4am (next day)
+                        
+                        let isOpen = false;
+
+                        // Case 1: Before midnight (current day's shift start)
+                        if (hour >= 11) {
+                            isOpen = true; // Always open after 11am on all days
+                        } 
+                        // Case 2: After midnight (previous day's shift continuation)
+                        else {
+                            const prevDay = (day === 0) ? 6 : day - 1;
+                            
+                            if (prevDay === 6 || prevDay === 0) { 
+                                // Previous day was Sat or Sun => Open until 4am
+                                if (hour < 4) isOpen = true;
+                            } else { 
+                                // Previous day was Mon-Fri => Open until 2am
+                                if (hour < 2) isOpen = true;
+                            }
+                        }
+
+                        // DOM Elements
+                        const container = document.getElementById('status-container');
+                        const text = document.getElementById('status-text');
+                        const dot = document.getElementById('status-dot');
+                        const ping = document.getElementById('status-ping');
+
+                        if (isOpen) {
+                            // OPEN STATE
+                            container.className = "flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 transition-all duration-300";
+                            text.innerText = "Open Now";
+                            text.className = "text-xs font-bold text-green-400 uppercase tracking-wide";
+                            dot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500";
+                            ping.style.display = "inline-flex"; // Show animation
+                        } else {
+                            // CLOSED STATE
+                            container.className = "flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 transition-all duration-300";
+                            text.innerText = "Closed";
+                            text.className = "text-xs font-bold text-red-500 uppercase tracking-wide";
+                            dot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
+                            ping.style.display = "none"; // Hide animation
+                        }
+                    }
+
+                    // Run on load and every minute
+                    document.addEventListener('DOMContentLoaded', updateBusinessStatus);
+                    setInterval(updateBusinessStatus, 60000);
+                </script>
+
+                <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-gray-500 text-sm">© 2026 FoodHeaven. All rights reserved.</p>
+                    <div class="flex gap-6 text-sm">
+                        <a href="#" class="text-gray-500 hover:text-primary transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-500 hover:text-primary transition-colors">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // User-specific persistent cart management
+        (function() {
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <text>
+                var currentUser = '@User.Identity.Name';
+                var previousUser = localStorage.getItem('foodHeaven_current_user');
+                
+                // If switching users, save the old user's cart first
+                if (previousUser && previousUser !== currentUser) {
+                    console.log('Switching from ' + previousUser + ' to ' + currentUser);
+                    
+                    // Save previous user's cart
+                var currentCart = localStorage.getItem('foodHeaven_cart');
+                    if (currentCart) {
+                        localStorage.setItem('foodHeaven_cart_' + previousUser, currentCart);
+                    }
+                    
+                    // Clear current cart when switching users
+                    localStorage.removeItem('foodHeaven_cart');
+                    localStorage.removeItem('foodHeaven_direct_checkout');
+                    
+                    // Load new user's saved cart
+                    var savedCart = localStorage.getItem('foodHeaven_cart_' + currentUser);
+                    if (savedCart) {
+                        console.log('Restoring cart for ' + currentUser + ':', savedCart);
+                        localStorage.setItem('foodHeaven_cart', savedCart);
+                    } else {
+                        console.log('No saved cart for ' + currentUser);
+                    }
+                } else if (!previousUser) {
+                    // First time login for this session - load saved cart if exists
+                    var savedCart = localStorage.getItem('foodHeaven_cart_' + currentUser);
+                    if (savedCart) {
+                        console.log('Restoring cart for ' + currentUser + ':', savedCart);
+                        localStorage.setItem('foodHeaven_cart', savedCart);
+                    }
+                }
+                
+                // Update current user
+                localStorage.setItem('foodHeaven_current_user', currentUser);
+                </text>
+            }
+            else
+            {
+                <text>
+                // User not logged in
+                var previousUser = localStorage.getItem('foodHeaven_current_user');
+                
+                // Save current cart to previous user if exists
+                if (previousUser) {
+                    var currentCart = localStorage.getItem('foodHeaven_cart');
+                    if (currentCart) {
+                        localStorage.setItem('foodHeaven_cart_' + previousUser, currentCart);
+                        console.log('Saved cart for ' + previousUser + ' on logout');
+                    }
+                }
+                
+                // Clear current session
+                localStorage.removeItem('foodHeaven_current_user');
+                localStorage.removeItem('foodHeaven_cart');
+                localStorage.removeItem('foodHeaven_direct_checkout');
+                sessionStorage.clear();
+                </text>
+            }
+        })();
+    </script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

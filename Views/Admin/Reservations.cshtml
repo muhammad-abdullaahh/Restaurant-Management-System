@@ -1,0 +1,123 @@
+@model IEnumerable<FoodHeaven.Models.Reservation>
+@{
+    ViewData["Title"] = "Reservations - Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-text-main dark:text-white">Table Reservations</h1>
+        <div class="flex gap-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">Total: @Model.Count()</span>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-card-dark rounded-xl shadow-lg border border-gray-100 dark:border-white/5 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">ID</th>
+                        <th scope="col" class="px-6 py-3">Customer</th>
+                        <th scope="col" class="px-6 py-3">Contact</th>
+                        <th scope="col" class="px-6 py-3">Date & Time</th>
+                        <th scope="col" class="px-6 py-3">Party Size</th>
+                        <th scope="col" class="px-6 py-3">Type</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">Special Requests</th>
+                        <th scope="col" class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                #@item.Id
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold">@item.CustomerName</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div>@item.PhoneNumber</div>
+                                <div class="text-xs opacity-70">@item.Email</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div>@item.ReservationDate.ToShortDateString()</div>
+                                <div class="text-xs font-bold text-primary">@item.ReservationTime</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @item.PartySize Guests
+                            </td>
+                            <td class="px-6 py-4">
+                                @if(item.ReservationType == "PrivateParty")
+                                {
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded border border-purple-400">Private Party</span>
+                                }
+                                else if(item.ReservationType == "Premium")
+                                {
+                                    <span class="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded border border-amber-400">Premium</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-400">Standard</span>
+                                }
+                            </td>
+                            <td class="px-6 py-4">
+                                @if (item.Status == "Confirmed")
+                                {
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Confirmed</span>
+                                }
+                                else if (item.Status == "Cancelled")
+                                {
+                                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Cancelled</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">@item.Status</span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 max-w-xs truncate" title="@item.SpecialRequests">
+                                @item.SpecialRequests
+                            </td>
+                            <td class="px-6 py-4">
+                                <button onclick="cleanReservation(@item.Id)" class="group bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 p-2 rounded-lg transition-colors" title="Clean / Remove Record">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-lg">cleaning_services</span>
+                                        <span class="font-bold text-xs">Clean</span>
+                                    </div>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cleanReservation(id) {
+        if (confirm('Are you sure the customer has left and you want to clean this record? This will permanently remove it from the database.')) {
+            fetch('/Admin/CleanReservation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `id=${id}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error cleaning reservation: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing the request');
+            });
+        }
+    }
+</script>

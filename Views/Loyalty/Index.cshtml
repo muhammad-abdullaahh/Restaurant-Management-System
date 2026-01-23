@@ -1,0 +1,147 @@
+@{
+    ViewData["Title"] = "Loyalty Rewards - FoodHeaven";
+}
+
+
+
+<!-- Main Content -->
+<main class="mx-auto flex max-w-[1440px] w-full flex-1 gap-8 px-6 py-8">
+    <div class="flex-1 max-w-5xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-text-main dark:text-white tracking-tight text-4xl lg:text-5xl font-extrabold leading-tight">Loyalty Rewards</h1>
+            <p class="text-text-main/70 dark:text-white/70 text-lg font-normal leading-normal pt-2">Earn points with every order and unlock exclusive rewards</p>
+        </div>
+
+        <!-- Hero Card -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-accent-gold shadow-glow mb-8">
+            <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 rounded-full bg-white/10 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-60 h-60 rounded-full bg-white/5 blur-3xl"></div>
+            <div class="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="flex-1 text-center md:text-left z-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/30">
+                        <span class="material-symbols-outlined text-sm fill-current">verified</span> Member
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-text-main tracking-tight mb-2">FoodHeaven Rewards</h2>
+                    <p class="text-text-main/90 text-lg max-w-md">Join our loyalty program and start earning points with every order!</p>
+                    <div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+                        <button class="bg-text-main text-primary font-bold py-3 px-6 rounded-xl hover:bg-[#0f0c05] transition active:scale-95 flex items-center gap-2 shadow-lg">
+                            <span class="material-symbols-outlined fill-current">qr_code_scanner</span>
+                            Scan to Earn
+                        </button>
+                        <button class="bg-white/20 backdrop-blur-sm text-text-main font-bold py-3 px-6 rounded-xl hover:bg-white/30 transition active:scale-95 flex items-center gap-2 border border-white/30">
+                            <span class="material-symbols-outlined">history</span>
+                            View History
+                        </button>
+                    </div>
+                </div>
+                <div class="relative flex items-center justify-center shrink-0 w-48 h-48 md:w-56 md:h-56">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle class="text-white/20" cx="50%" cy="50%" fill="transparent" r="45%" stroke="currentColor" stroke-width="12"></circle>
+                        <circle class="text-text-main transition-all duration-1000 ease-out" cx="50%" cy="50%" fill="transparent" r="45%" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="70" stroke-linecap="round" stroke-width="12"></circle>
+                    </svg>
+                    <div class="absolute flex flex-col items-center">
+                        <span class="text-4xl md:text-5xl font-black text-text-main">0</span>
+                        <span class="text-xs font-bold text-text-main/80 uppercase tracking-wide">Points</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="bg-card-light dark:bg-card-dark rounded-2xl p-8 shadow-soft dark:shadow-none border border-gray-100 dark:border-white/5 mb-8">
+            <h3 class="text-text-main dark:text-white text-2xl font-bold mb-6">How It Works</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex items-center justify-center size-16 rounded-full bg-primary/10 text-primary mb-4">
+                        <span class="material-symbols-outlined text-3xl fill-current">shopping_bag</span>
+                    </div>
+                    <h4 class="text-text-main dark:text-white font-bold text-lg mb-2">1. Order & Earn</h4>
+                    <p class="text-text-main/60 dark:text-white/50 text-sm">Earn 1 point for every $1 spent on your orders</p>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex items-center justify-center size-16 rounded-full bg-primary/10 text-primary mb-4">
+                        <span class="material-symbols-outlined text-3xl fill-current">stars</span>
+                    </div>
+                    <h4 class="text-text-main dark:text-white font-bold text-lg mb-2">2. Collect Points</h4>
+                    <p class="text-text-main/60 dark:text-white/50 text-sm">Watch your points grow with each purchase</p>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex items-center justify-center size-16 rounded-full bg-primary/10 text-primary mb-4">
+                        <span class="material-symbols-outlined text-3xl fill-current">redeem</span>
+                    </div>
+                    <h4 class="text-text-main dark:text-white font-bold text-lg mb-2">3. Redeem Rewards</h4>
+                    <p class="text-text-main/60 dark:text-white/50 text-sm">Use points for discounts and free items</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Rewards -->
+        <div class="bg-card-light dark:bg-card-dark rounded-2xl p-8 shadow-soft dark:shadow-none border border-gray-100 dark:border-white/5">
+            <h3 class="text-text-main dark:text-white text-2xl font-bold mb-6">Available Rewards</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-between p-5 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-white/10 hover:border-primary/50 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary">
+                            <span class="material-symbols-outlined text-2xl fill-current">local_cafe</span>
+                        </div>
+                        <div>
+                            <h4 class="text-text-main dark:text-white font-bold">Free Drink</h4>
+                            <p class="text-text-main/60 dark:text-white/50 text-sm">50 points</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary/30 transition-colors">
+                        Redeem
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-5 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-white/10 hover:border-primary/50 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary">
+                            <span class="material-symbols-outlined text-2xl fill-current">cake</span>
+                        </div>
+                        <div>
+                            <h4 class="text-text-main dark:text-white font-bold">Free Dessert</h4>
+                            <p class="text-text-main/60 dark:text-white/50 text-sm">100 points</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary/30 transition-colors">
+                        Redeem
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-5 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-white/10 hover:border-primary/50 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary">
+                            <span class="material-symbols-outlined text-2xl fill-current">percent</span>
+                        </div>
+                        <div>
+                            <h4 class="text-text-main dark:text-white font-bold">10% Off Order</h4>
+                            <p class="text-text-main/60 dark:text-white/50 text-sm">200 points</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary/30 transition-colors">
+                        Redeem
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-5 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-white/10 hover:border-primary/50 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center justify-center size-14 rounded-full bg-primary/10 text-primary">
+                            <span class="material-symbols-outlined text-2xl fill-current">restaurant</span>
+                        </div>
+                        <div>
+                            <h4 class="text-text-main dark:text-white font-bold">Free Main Course</h4>
+                            <p class="text-text-main/60 dark:text-white/50 text-sm">500 points</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-primary/20 text-primary text-sm font-bold rounded-lg hover:bg-primary/30 transition-colors">
+                        Redeem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+

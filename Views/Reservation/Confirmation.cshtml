@@ -1,0 +1,80 @@
+@model FoodHeaven.Models.Reservation
+@{
+    ViewData["Title"] = "Reservation Confirmed - FoodHeaven";
+}
+
+<!-- Lottie Player -->
+<script src="https://unpkg.com/@@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+
+<div class="min-h-[80vh] flex items-center justify-center bg-gray-50 dark:bg-zinc-900 px-4 py-12">
+    <div class="max-w-2xl w-full bg-white dark:bg-card-dark rounded-[2.5rem] shadow-2xl overflow-hidden relative">
+        <!-- Decoration -->
+        <div class="absolute inset-0 border-2 border-transparent rounded-[2.5rem] bg-gradient-to-br from-green-500/10 to-transparent pointer-events-none"></div>
+        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-green-500"></div>
+
+        <div class="p-8 md:p-12 text-center relative z-10">
+            <!-- Animation -->
+            <div class="w-40 h-40 mx-auto mb-6 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                <dotlottie-player src="https://lottie.host/9e414848-6a3f-4e08-966e-c6c7b944208e/2X0m4k3b3M.json" background="transparent" speed="1" style="width: 120px; height: 120px;" loop autoplay></dotlottie-player>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-black text-text-main dark:text-white mb-4 tracking-tight">Confirmed!</h1>
+            <p class="text-lg text-text-muted dark:text-white/70 mb-8 max-w-md mx-auto">
+                Thank you <span class="font-bold text-text-main dark:text-white">@Model.CustomerName</span>! Your table has been successfully reserved.
+            </p>
+
+            <!-- Details Card -->
+            <div class="bg-gray-50 dark:bg-black/20 rounded-2xl p-6 mb-8 text-left border border-gray-100 dark:border-white/5">
+                <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Date</span>
+                        <span class="font-bold text-text-main dark:text-white text-lg">@Model.ReservationDate.ToString("ddd, MMM dd")</span>
+                    </div>
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Time</span>
+                        <span class="font-bold text-text-main dark:text-white text-lg">@Model.ReservationTime.ToString("hh\\:mm")</span>
+                    </div>
+                     <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Guests</span>
+                        <span class="font-bold text-text-main dark:text-white text-lg">@Model.PartySize People</span>
+                    </div>
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Table Type</span>
+                        <span class="font-bold text-primary text-lg">
+                            @if(Model.ReservationType == "PrivateParty") { 
+                                <span>Private Party</span> 
+                            } else if (Model.ReservationType == "Premium") { 
+                                <span>Premium</span> 
+                            } else { 
+                                <span>Standard</span> 
+                            }
+                        </span>
+                    </div>
+                     <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Confirmation SMS</span>
+                        <span class="font-bold text-text-main dark:text-white text-md">Sent to @Model.PhoneNumber</span>
+                    </div>
+                     <div>
+                        <span class="text-xs uppercase tracking-wider text-text-muted font-bold block mb-1">Reference ID</span>
+                        <span class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded text-sm">#@Model.Id</span>
+                    </div>
+                    @if (Model.ReservationType == "Premium")
+                    {
+                        <div class="col-span-2 border-t border-gray-100 dark:border-white/5 pt-4 mt-2">
+                             <span class="text-xs uppercase tracking-wider text-amber-500 font-bold block mb-1">Total Estimated Cost</span>
+                             <span class="font-black text-2xl text-text-main dark:text-white">$@Model.EstimatedCost.ToString("0.00")</span>
+                             <span class="text-xs text-gray-400 block mt-1">($15.00 x @Model.PartySize Guests)</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="/" class="px-8 py-3 rounded-xl font-bold bg-black dark:bg-white text-white dark:text-black hover:scale-105 transition-transform shadow-lg">Back to Home</a>
+                <a href="/Menu" class="px-8 py-3 rounded-xl font-bold bg-primary text-white hover:bg-primary-dark hover:scale-105 transition-transform shadow-lg shadow-primary/30">Browse Menu</a>
+            </div>
+            
+             <p class="mt-8 text-xs text-text-muted">Currently viewing confirmation for #@Model.Id</p>
+        </div>
+    </div>
+</div>

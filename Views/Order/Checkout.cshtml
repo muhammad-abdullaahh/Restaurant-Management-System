@@ -1,0 +1,193 @@
+@{
+    ViewData["Title"] = "Shopping Cart - FoodHeaven";
+}
+
+
+
+<!-- Main Content -->
+<main class="mx-auto flex max-w-[1440px] w-full flex-1 gap-8 px-6 py-8">
+    <div class="flex-1 max-w-4xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-text-main dark:text-white tracking-tight text-4xl lg:text-5xl font-extrabold leading-tight">Checkout</h1>
+            <p class="text-text-main/70 dark:text-white/70 text-lg font-normal leading-normal pt-2">Complete your order</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Cart Items -->
+            <div class="lg:col-span-2">
+                <div id="cartItemsContainer" class="space-y-4">
+                    <!-- Items will be populated by JavaScript -->
+                </div>
+                
+                <div id="emptyCart" class="hidden text-center py-16">
+                    <span class="material-symbols-outlined text-6xl text-text-main/30 dark:text-white/30 mb-4 inline-block">shopping_cart</span>
+                    <p class="text-text-main/60 dark:text-white/50 text-lg mb-4">Your cart is empty</p>
+                    <a href="/Menu" class="inline-flex items-center gap-2 bg-primary text-text-main font-bold py-3 px-6 rounded-xl hover:bg-[#d9a60b] transition-colors shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined">restaurant_menu</span>
+                        Browse Menu
+                    </a>
+                </div>
+
+                <!-- Delivery Details Form -->
+                <div id="delivery-details-form" class="mt-8">
+                    <h3 class="text-2xl font-bold mb-6 text-text-main dark:text-white">Delivery Details</h3>
+                    <div class="bg-card-light dark:bg-card-dark rounded-2xl p-6 shadow-soft dark:shadow-none border border-gray-100 dark:border-white/5 space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Full Name</label>
+                                <input type="text" id="customerName" 
+                                       class="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 text-text-main dark:text-white focus:ring-2 focus:ring-primary focus:outline-none transition-all placeholder-gray-400"
+                                       value="@(User.Identity?.IsAuthenticated == true ? User.Identity.Name : "")" 
+                                       placeholder="Enter your name">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Phone Number</label>
+                                <input type="tel" id="customerPhone" 
+                                       class="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 text-text-main dark:text-white focus:ring-2 focus:ring-primary focus:outline-none transition-all placeholder-gray-400"
+                                       placeholder="+1 234 567 890">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Delivery Address</label>
+                            <input type="text" id="deliveryAddressInput" required
+                                   class="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 text-text-main dark:text-white focus:ring-2 focus:ring-primary focus:outline-none transition-all placeholder-gray-400"
+                                   placeholder="Street Address, City, Zip Code">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Order Notes (Optional)</label>
+                            <textarea id="orderNotes" rows="2"
+                                   class="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 text-text-main dark:text-white focus:ring-2 focus:ring-primary focus:outline-none transition-all placeholder-gray-400 resize-none"
+                                   placeholder="Any special instructions for delivery?"></textarea>
+                        </div>
+                        
+                         <div>
+                            <label class="block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1">Payment Method</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer border border-gray-200 dark:border-white/10 p-3 rounded-xl w-full hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <input type="radio" name="paymentMethod" value="Cash on Delivery" checked class="w-5 h-5 text-primary focus:ring-primary bg-gray-100 border-gray-300">
+                                    <span class="text-text-main dark:text-white font-bold ml-1">Cash on Delivery</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer border border-gray-200 dark:border-white/10 p-3 rounded-xl w-full hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                    <input type="radio" name="paymentMethod" value="Credit Card" class="w-5 h-5 text-primary focus:ring-primary bg-gray-100 border-gray-300">
+                                    <span class="text-text-main dark:text-white font-bold ml-1">Credit Card</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-28">
+                    <!-- Promo Code -->
+                    <div class="bg-card-light dark:bg-card-dark rounded-2xl p-6 shadow-soft dark:shadow-none border border-gray-100 dark:border-white/5 mb-6">
+                        <h3 class="text-text-main dark:text-white font-bold text-lg mb-4">Promo Code</h3>
+                        <div class="flex gap-2">
+                            <input id="promoCodeInput" 
+                                   type="text" 
+                                   class="flex-1 px-4 py-3 rounded-xl bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 text-text-main dark:text-white placeholder-text-main/40 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary transition-all" 
+                                   placeholder="Enter code" />
+                            <button onclick="applyPromoCode()" class="px-6 py-3 bg-primary text-text-main font-bold rounded-xl hover:bg-[#d9a60b] transition-colors">
+                                Apply
+                            </button>
+                        </div>
+                        <p class="text-xs text-text-main/60 dark:text-white/50 mt-2">Try: SAVE10, SAVE20, or FIRST15</p>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="bg-card-light dark:bg-card-dark rounded-2xl p-6 shadow-soft dark:shadow-none border border-gray-100 dark:border-white/5">
+                        <h3 class="text-text-main dark:text-white font-bold text-lg mb-4">Order Summary</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-main/60 dark:text-white/50 text-sm">Subtotal</span>
+                                <span id="subtotal" class="text-text-main dark:text-white font-medium">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-main/60 dark:text-white/50 text-sm">Delivery Fee</span>
+                                <span id="deliveryFee" class="text-text-main dark:text-white font-medium">$5.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-main/60 dark:text-white/50 text-sm">Tax (10%)</span>
+                                <span id="tax" class="text-text-main dark:text-white font-medium">$0.00</span>
+                            </div>
+                            <div id="discountRow" class="hidden flex justify-between items-center">
+                                <span class="text-green-600 dark:text-green-400 text-sm">Discount</span>
+                                <span id="discount" class="text-green-600 dark:text-green-400 font-medium">-$0.00</span>
+                            </div>
+                            <div class="h-px bg-gray-200 dark:bg-white/10"></div>
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-text-main dark:text-white text-lg font-bold">Total</span>
+                                <span id="total" class="text-text-main dark:text-white text-2xl font-bold">$0.00</span>
+                            </div>
+                        </div>
+
+                        <button onclick="placeOrder()" class="w-full mt-6 bg-gradient-to-r from-primary to-[#FFD700] hover:to-[#ffc400] text-text-main font-bold py-4 rounded-xl transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">shopping_bag</span>
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+
+
+@section Scripts {
+    <script>
+        // Render cart on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCheckoutItems();
+        });
+
+        // Checkout specific render function
+        function renderCheckoutItems() {
+            const cartContainer = document.getElementById('cartItemsContainer');
+            const emptyCart = document.getElementById('emptyCart');
+
+            if (!cartContainer) return;
+
+            const items = cart.getCheckoutItems();
+
+             if (items.length === 0) {
+                 if (emptyCart) emptyCart.classList.remove('hidden');
+                 cartContainer.classList.add('hidden');
+                 return;
+            }
+
+            if (emptyCart) emptyCart.classList.add('hidden');
+            cartContainer.classList.remove('hidden');
+
+            cartContainer.innerHTML = items.map(item => `
+                <div class="flex gap-4 bg-card-light dark:bg-card-dark p-4 rounded-xl border border-gray-100 dark:border-white/5 items-center">
+                    <div class="bg-center bg-no-repeat bg-cover rounded-lg w-16 h-16 shrink-0" style="background-image: url('${item.imageUrl}');"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                             <h3 class="text-text-main dark:text-white font-bold text-sm tracking-wide">${item.name}</h3>
+                             <p class="text-text-main dark:text-white font-bold text-sm">$${(item.price * item.quantity).toFixed(2)}</p>
+                        </div>
+                        <p class="text-text-main/60 dark:text-white/50 text-xs mt-1">Qty: ${item.quantity}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            calculateCheckoutTotals(items);
+        }
+
+        function calculateCheckoutTotals(items) {
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = subtotal > 0 ? 5.00 : 0;
+            const tax = subtotal * 0.10;
+            const total = subtotal + deliveryFee + tax;
+
+            if (document.getElementById('subtotal')) document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            if (document.getElementById('deliveryFee')) document.getElementById('deliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
+            if (document.getElementById('tax')) document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            if (document.getElementById('total')) document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+    </script>
+}

@@ -1,0 +1,1034 @@
+@{
+    ViewData["Title"] = "Admin Dashboard - FoodHeaven";
+    Layout = null; // We are building a custom full-screen layout
+}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'], display: ['Outfit', 'sans-serif'] },
+                    colors: { primary: '#FFD700', 'primary-dark': '#E6C200', 'background-light': '#FAFAFA', 'background-dark': '#000000', 'text-main': '#1a1a1a', 'card-light': '#FFFFFF', 'card-dark': '#121212' },
+                    boxShadow: { 'soft': '0 10px 40px -10px rgba(0,0,0,0.08)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .active-nav { background-color: #FFD700; color: #000; font-weight: 700; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-[#050505] text-white overflow-hidden h-screen flex">
+
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-20 hidden md:hidden glass-panel opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 h-full bg-[#0a0a0a] border-r border-white/5 flex flex-col shrink-0 transition-transform duration-300 fixed md:static z-30 -translate-x-full md:translate-x-0 inset-y-0 left-0">
+        <!-- Logo -->
+        <div class="p-6 flex items-center justify-between border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl">restaurant_menu</span>
+                <div>
+                    <h1 class="font-black text-xl tracking-tight leading-none">FOOD<span class="text-primary">HEAVEN</span></h1>
+                    <span class="text-xs text-gray-500 font-medium tracking-widest uppercase">Admin Panel</span>
+                </div>
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all active-nav">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="font-medium">Dashboard</span>
+            </button>
+            
+            <button onclick="switchTab('menu')" id="nav-menu" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">restaurant</span>
+                <span class="font-medium">Menu Items</span>
+            </button>
+            
+            <button onclick="switchTab('orders')" id="nav-orders" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">receipt_long</span>
+                <span class="font-medium">Orders</span>
+            </button>
+            
+            <button onclick="switchTab('reservations')" id="nav-reservations" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">event_seat</span>
+                <span class="font-medium">Reservations</span>
+            </button>
+            
+            <button onclick="switchTab('users')" id="nav-users" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">group</span>
+                <span class="font-medium">Users</span>
+            </button>
+            
+            <button onclick="switchTab('admins')" id="nav-admins" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">shield_person</span>
+                <span class="font-medium">Admins</span>
+            </button>
+            
+            <button onclick="switchTab('history')" id="nav-history" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">history</span>
+                <span class="font-medium">Reports</span>
+            </button>
+            
+            <button onclick="switchTab('messages')" id="nav-messages" class="nav-item w-full flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                <span class="material-symbols-outlined">mail</span>
+                <span class="font-medium">Messages</span>
+            </button>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="p-4 border-t border-white/5">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black font-bold">
+                    @User.Identity.Name?.Substring(0, 1).ToUpper()
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold truncate">@User.Identity.Name</p>
+                    <p class="text-xs text-green-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Online</p>
+                </div>
+                <a href="/Admin/Logout" class="p-2 hover:bg-red-500/20 hover:text-red-500 rounded-lg transition-colors" title="Logout">
+                    <span class="material-symbols-outlined text-lg">logout</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-hidden flex flex-col bg-[#050505] relative w-full">
+        
+        <!-- Header -->
+        <header class="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-[#0a0a0a]/50 backdrop-blur-md sticky top-0 z-10 w-full">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden text-white p-2 -ml-2 hover:bg-white/10 rounded-lg transition-colors">
+                    <span class="material-symbols-outlined text-2xl">menu</span>
+                </button>
+                <h2 id="page-title" class="text-lg md:text-xl font-bold truncate">Dashboard</h2>
+            </div>
+            <div class="flex items-center gap-2 md:gap-4">
+                <span class="hidden md:inline text-sm text-gray-500">@DateTime.Now.ToString("dddd, MMMM dd, yyyy")</span>
+                <a href="/" target="_blank" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs font-bold border border-white/10 transition-colors flex items-center gap-2">
+                    <span class="hidden md:inline">Visit Website</span> <span class="material-symbols-outlined text-sm">open_in_new</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Content Views Container -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative scroll-smooth" id="content-container">
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="space-y-8 animate-fade-in">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-blue-500/10 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">shopping_bag</span>
+                            </div>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-bold">+12%</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">@ViewBag.TotalOrders</h3>
+                        <p class="text-gray-500 text-sm font-medium">Total Orders</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-green-500/10 text-green-500 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">payments</span>
+                            </div>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-bold">+8%</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">$@ViewBag.TotalRevenue?.ToString("N0")</h3>
+                        <p class="text-gray-500 text-sm font-medium">Total Revenue</p>
+                        @if (ViewBag.PremiumRevenue > 0)
+                        {
+                            <p class="text-[10px] text-primary mt-2 flex items-center gap-1 bg-primary/10 w-fit px-2 py-0.5 rounded-full border border-primary/20">
+                                <span class="material-symbols-outlined text-[12px]">diamond</span> 
+                                Includes $@ViewBag.PremiumRevenue.ToString("N0") Premium
+                            </p>
+                        }
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">schedule</span>
+                            </div>
+                             <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded-full font-bold">Action</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">@ViewBag.PendingOrders</h3>
+                        <p class="text-gray-500 text-sm font-medium">Pending Orders</p>
+                    </div>
+                    
+                    <div class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-pink-500/10 text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">event_seat</span>
+                            </div>
+                             <span class="text-xs bg-pink-500/20 text-pink-400 px-2 py-1 rounded-full font-bold">Bookings</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">@ViewBag.TotalReservations</h3>
+                        <p class="text-gray-500 text-sm font-medium">Total Reservations</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-purple-500/10 text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">group</span>
+                            </div>
+                            <span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full font-bold">Users</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">@ViewBag.TotalUsers</h3>
+                        <p class="text-gray-500 text-sm font-medium">Active Users</p>
+                    </div>
+
+                    <div onclick="switchTab('admins')" class="p-6 rounded-2xl bg-[#0F0F0F] border border-white/5 relative group hover:border-primary/30 transition-all cursor-pointer">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-xl bg-red-500/10 text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-2xl">shield_person</span>
+                            </div>
+                            <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full font-bold">Staff</span>
+                        </div>
+                        <h3 class="text-3xl font-black text-white mb-1">@ViewBag.TotalAdmins</h3>
+                        <p class="text-gray-500 text-sm font-medium">Administrators</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Tables -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Recent Orders -->
+                    <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                             <span class="material-symbols-outlined text-primary">receipt_long</span> Recent Orders
+                        </h3>
+                        <div class="space-y-3">
+                            @if (ViewBag.RecentOrders != null)
+                            {
+                                foreach(var order in ViewBag.RecentOrders)
+                                {
+                                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                        <div>
+                                            <p class="font-bold text-sm">#@order.OrderNumber</p>
+                                            <p class="text-xs text-gray-500">@order.CustomerName</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold text-primary">$@order.Total.ToString("F2")</p>
+                                            <span class="text-[10px] px-2 py-0.5 rounded-full @(order.Status == "Pending" ? "bg-orange-500/20 text-orange-500" : "bg-green-500/20 text-green-500")">@order.Status</span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Recent Users -->
+                    <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                             <span class="material-symbols-outlined text-primary">person_add</span> New Users
+                        </h3>
+                         <div class="space-y-3">
+                            @if (ViewBag.RecentUsers != null)
+                            {
+                                foreach(var user in ViewBag.RecentUsers)
+                                {
+                                    <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">
+                                                @user.Username.Substring(0,1).ToUpper()
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-sm">@user.Username</p>
+                                                <p class="text-xs text-gray-500">@user.Email</p>
+                                                <p class="text-[10px] text-primary font-mono mt-0.5">
+                                                    PW: @(string.IsNullOrEmpty(user.Password) ? "Encrypted" : user.Password)
+                                                    @if(string.IsNullOrEmpty(user.Password)) {
+                                                        <button onclick="resetPassword(@user.Id)" class="text-[9px] bg-primary/20 hover:bg-primary hover:text-black px-1 rounded ml-2 transition-colors">Reset to 123456</button>
+                                                    }
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] text-gray-500">@user.CreatedAt.ToString("MMM dd")</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: MENU ITEMS -->
+            <div id="view-menu" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <select id="menu-filter" onchange="loadMenuItems()" class="bg-[#0F0F0F] w-full md:w-auto border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-300 focus:border-primary outline-none">
+                            <option value="All">All Categories</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach(var cat in ViewBag.Categories) { <option value="@cat">@cat</option> }
+                            }
+                        </select>
+                    </div>
+                    <button onclick="openMenuModal()" class="w-full md:w-auto px-4 py-2 bg-primary text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-xl">add</span> Add New Item
+                    </button>
+                </div>
+
+                <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Item</th>
+                                <th class="p-4">Category</th>
+                                <th class="p-4">Price</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menu-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: ORDERS -->
+            <div id="view-orders" class="hidden space-y-6">
+                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h3 class="text-2xl font-bold">Today's Orders</h3>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="loadOrders()" class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-xl transition-colors" title="Refresh">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button onclick="clearOrders()" class="flex-1 md:flex-none px-4 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">restart_alt</span> Start New Day
+                        </button>
+                    </div>
+                 </div>
+                 <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Order #</th>
+                                <th class="p-4">Customer</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Total</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+             <!-- VIEW: RESERVATIONS -->
+            <div id="view-reservations" class="hidden space-y-6">
+                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h3 class="text-2xl font-bold">Reservations</h3>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="loadReservations()" class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-xl transition-colors" title="Refresh">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button onclick="clearReservations()" class="flex-1 md:flex-none px-4 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">restart_alt</span> Start New Day
+                        </button>
+                    </div>
+                 </div>
+                 <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Customer</th>
+                                <th class="p-4">Date & Time</th>
+                                <th class="p-4">Guests</th>
+                                <th class="p-4">Type</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservations-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- VIEW: USERS -->
+            <div id="view-users" class="hidden space-y-6">
+                <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Name</th>
+                                <th class="p-4">Email</th>
+                                <th class="p-4 text-primary">Password</th>
+                                <th class="p-4">Joined</th>
+                                <th class="p-4">Last Login</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+             <!-- VIEW: ADMINS -->
+            <div id="view-admins" class="hidden space-y-6">
+                <div class="flex justify-between items-center mb-4">
+                     <h3 class="text-2xl font-bold">Administrator Management</h3>
+                     <button onclick="openAdminModal()" class="px-4 py-2 bg-primary text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-xl">add_moderator</span> Add New Admin
+                    </button>
+                </div>
+                <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Name</th>
+                                <th class="p-4">Email</th>
+                                <th class="p-4 text-primary">Password</th>
+                                <th class="p-4">Role</th>
+                                <th class="p-4">Joined</th>
+                                <th class="p-4">Last Login</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admins-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+             <!-- VIEW: HISTORY -->
+            <div id="view-history" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                     <h3 class="text-2xl font-bold">Daily Reports</h3>
+                     <div class="flex gap-2 w-full md:w-auto">
+                         <button onclick="loadHistory()" class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-xl transition-colors" title="Refresh">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button onclick="clearHistory()" class="flex-1 md:flex-none px-4 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">delete_forever</span> Clear History
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-[#0F0F0F] border border-white/5 rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
+                        <thead class="bg-white/5 text-xs uppercase text-gray-400 font-bold">
+                            <tr>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Total Orders</th>
+                                <th class="p-4">Total Reservations</th>
+                                <th class="p-4">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="divide-y divide-white/5 text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+             <!-- VIEW: MESSAGES -->
+            <div id="view-messages" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+                     <h3 class="text-2xl font-bold">Messages</h3>
+                     <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="loadMessages()" class="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-xl transition-colors" title="Refresh">
+                            <span class="material-symbols-outlined">refresh</span>
+                        </button>
+                        <button onclick="clearMessages()" class="flex-1 md:flex-none px-4 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">delete_sweep</span> Clear All
+                        </button>
+                     </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4" id="messages-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Menu Item Modal -->
+    <div id="menuModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-[#121212] w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-6 relative">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-6">Add New Item</h3>
+            <form id="menuForm" onsubmit="saveMenuItem(event)" class="space-y-4">
+                <input type="hidden" id="itemId">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Name</label>
+                    <input type="text" id="itemName" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                     <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Price</label>
+                        <input type="number" step="0.01" id="itemPrice" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                    </div>
+                     <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Category</label>
+                        <select id="itemCategory" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                             @if (ViewBag.Categories != null) { foreach(var cat in ViewBag.Categories) { <option value="@cat">@cat</option> } }
+                             <option value="Specials">Specials</option>
+                        </select>
+                    </div>
+                </div>
+                 <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Image URL</label>
+                    <input type="text" id="itemImage" placeholder="/images/..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Description</label>
+                    <textarea id="itemDescription" rows="3" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none"></textarea>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeMenuModal()" class="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-primary text-black hover:bg-white rounded-xl font-bold transition-colors">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // --- NAVIGATION ---
+        function switchTab(tabId) {
+            // Update Active Nav
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active-nav');
+                el.classList.add('text-gray-400');
+            });
+            const activeBtn = document.getElementById('nav-' + tabId);
+            activeBtn.classList.add('active-nav');
+            activeBtn.classList.remove('text-gray-400');
+
+            // Show View
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            
+            // Update Title
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'menu': 'Menu Management',
+                'orders': 'Order Management',
+                'reservations': 'Reservation Management',
+                'users': 'User Directory',
+                'admins': 'Administrator Management',
+                'history': 'Daily Reports & History',
+                'messages': 'Messages'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+
+            // Load Data
+            if (tabId === 'menu') loadMenuItems();
+            if (tabId === 'orders') loadOrders();
+            if (tabId === 'reservations') loadReservations();
+            if (tabId === 'users') loadUsers();
+            if (tabId === 'admins') loadAdmins();
+            if (tabId === 'history') loadHistory();
+            if (tabId === 'messages') loadMessages();
+
+            // Mobile: Close Sidebar on selection
+            if(window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if(!sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebar();
+                }
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                // Close
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+
+        // --- MENU MANAGEMENT ---
+        function loadMenuItems() {
+            const category = document.getElementById('menu-filter').value;
+            fetch('/Menu/GetMenuItems?category=' + category)
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('menu-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(item => {
+                        const row = `
+                            <tr>
+                                <td class="p-4 flex items-center gap-3">
+                                    <img src="${item.imageUrl}" class="w-10 h-10 rounded-lg object-cover bg-white/5">
+                                    <span class="font-bold">${item.name}</span>
+                                </td>
+                                <td class="p-4 text-gray-400">${item.category}</td>
+                                <td class="p-4 font-bold text-primary">$${item.price.toFixed(2)}</td>
+                                <td class="p-4 text-right">
+                                    <button onclick="editItem(${item.id})" class="p-2 hover:text-primary transition-colors"><span class="material-symbols-outlined">edit</span></button>
+                                    <button onclick="deleteItem(${item.id})" class="p-2 hover:text-red-500 transition-colors"><span class="material-symbols-outlined">delete</span></button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                });
+        }
+
+        function openMenuModal() {
+            document.getElementById('itemId').value = ''; 
+            document.getElementById('menuForm').reset();
+            document.getElementById('modalTitle').innerText = 'Add New Item';
+            document.getElementById('menuModal').classList.remove('hidden');
+            document.getElementById('menuModal').classList.add('flex');
+        }
+
+        function closeMenuModal() {
+             document.getElementById('menuModal').classList.add('hidden');
+             document.getElementById('menuModal').classList.remove('flex');
+        }
+
+        function editItem(id) {
+            fetch('/Menu/GetMenuItem?id=' + id)
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    const item = data.item;
+                    document.getElementById('itemId').value = item.id;
+                    document.getElementById('itemName').value = item.name;
+                    document.getElementById('itemPrice').value = item.price;
+                    document.getElementById('itemCategory').value = item.category;
+                    document.getElementById('itemImage').value = item.imageUrl;
+                    document.getElementById('itemDescription').value = item.description;
+                    
+                    document.getElementById('modalTitle').innerText = 'Edit Item';
+                    document.getElementById('menuModal').classList.remove('hidden');
+                    document.getElementById('menuModal').classList.add('flex');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+        
+        // Redefined loadMenuItems to enable Edit
+        // ... (See simplified logic below)
+        
+        // --- ORDERS ---
+        function loadOrders() {
+            fetch('/Admin/GetOrdersData')
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('orders-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(order => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="p-4 font-mono text-gray-400">#${order.id}</td>
+                                <td class="p-4">
+                                    <div class="font-bold">${order.customerName}</div>
+                                    <div class="text-[10px] text-gray-400 mt-1 max-w-[200px] truncate" title="${order.deliveryAddress || ''}">
+                                        ${order.deliveryAddress ? '<span class="material-symbols-outlined text-[10px] align-middle mr-1">location_on</span>' + order.deliveryAddress : 'Pickup / Dine-in'}
+                                    </div>
+                                </td>
+                                <td class="p-4 text-xs text-gray-500">${order.date}</td>
+                                <td class="p-4 font-bold text-primary">$${order.total.toFixed(2)}</td>
+                                <td class="p-4"><span class="px-2 py-1 rounded text-xs font-bold ${getStatusColor(order.status)}">${order.status}</span></td>
+                                <td class="p-4 text-right">
+                                    <button onclick="updateStatus(${order.id}, 'Completed')" class="text-xs font-bold text-green-500 hover:underline mr-2">Complete</button>
+                                    <button onclick="updateStatus(${order.id}, 'Delivered')" class="text-xs font-bold text-blue-500 hover:underline">Deliver</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function updateStatus(id, status) {
+            fetch('/Admin/UpdateOrderStatus?id=' + id + '&status=' + status, { method: 'POST' })
+            .then(r => r.json())
+            .then(d => { if(d.success) loadOrders(); });
+        }
+
+        function getStatusColor(status) {
+            if(status === 'Pending') return 'bg-orange-500/10 text-orange-500';
+            if(status === 'Completed') return 'bg-green-500/10 text-green-500';
+            return 'bg-blue-500/10 text-blue-500';
+        }
+
+        // --- RESERVATIONS ---
+        function loadReservations() {
+            fetch('/Admin/GetReservationsData')
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('reservations-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(res => {
+                        let statusColor = 'text-red-500';
+                        if (res.status === 'Confirmed') statusColor = 'text-green-500';
+                        else if (res.status === 'Completed') statusColor = 'text-blue-500';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="p-4 font-bold">${res.customerName}</td>
+                                <td class="p-4 text-sm text-gray-400">${res.date} at ${res.time}</td>
+                                <td class="p-4">${res.partySize} ppl</td>
+                                <td class="p-4"><span class="text-xs border border-white/20 px-2 py-0.5 rounded">${res.reservationType}</span></td>
+                                <td class="p-4"><span class="text-xs font-bold ${statusColor}">${res.status}</span></td>
+                                <td class="p-4 text-right">
+                                     ${res.status === 'Confirmed' ? `
+                                        <button onclick="updateResStatus(${res.id}, 'Completed')" class="text-xs font-bold text-green-500 hover:underline mr-2">Complete</button>
+                                        <button onclick="updateResStatus(${res.id}, 'Cancelled')" class="text-xs text-red-500 hover:underline">Cancel</button>
+                                     ` : ''}
+                                     ${res.status === 'Completed' ? '<span class="text-xs text-green-500 font-bold flex items-center justify-end gap-1"><span class="material-symbols-outlined text-sm">check</span> Done</span>' : ''}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+        
+        function updateResStatus(id, status) {
+             fetch('/Admin/UpdateReservationStatus?id=' + id + '&status=' + status, { method: 'POST' })
+            .then(r => r.json())
+            .then(d => { if(d.success) loadReservations(); });
+        }
+
+        function clearOrders() {
+            if(!confirm('START NEW DAY?\n\nThis will DELETE ALL orders to prepare for a fresh day. This action cannot be undone.')) return;
+            fetch('/Admin/ClearAllOrders', { method: 'POST' })
+            .then(r => r.json())
+            .then(d => {
+                if(d.success) {
+                    loadOrders();
+                    alert('Orders cleared successfully. Ready for a new day!');
+                } else {
+                    alert('Error: ' + d.message);
+                }
+            });
+        }
+
+        function clearReservations() {
+            if(!confirm('START NEW DAY?\n\nThis will DELETE ALL reservations. Are you sure you want to clear the list?')) return;
+            fetch('/Admin/ClearAllReservations', { method: 'POST' })
+            .then(r => r.json())
+            .then(d => {
+                if(d.success) {
+                    loadReservations();
+                    alert('Reservations cleared successfully.');
+                } else {
+                    alert('Error: ' + d.message);
+                }
+            });
+        }
+
+        // --- USERS ---
+        function loadUsers() {
+             fetch('/Admin/GetUsersData')
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('users-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(user => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="p-4 font-bold flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">
+                                        ${user.fullName ? user.fullName.charAt(0) : '?'}
+                                    </div>
+                                    ${user.fullName || 'User'}
+                                </td>
+                                <td class="p-4 text-gray-400">${user.email}</td>
+                                <td class="p-4 font-mono text-primary">${user.password || `<button onclick="resetPassword(${user.id})" class="text-[10px] bg-primary/10 hover:bg-primary hover:text-black px-2 py-0.5 rounded transition-colors">Reset to 123456</button>`}</td>
+                                <td class="p-4 text-xs">${user.joined}</td>
+                                <td class="p-4 text-xs font-mono text-green-400">${user.lastLogin}</td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function resetPassword(id) {
+            if(!confirm('This will reset the user password to 123456. Continue?')) return;
+            fetch('/Admin/ResetUserPassword/' + id, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Password reset to 123456');
+                    location.reload(); // Refresh to show new PW
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+    </script>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-[#121212] w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-6 relative">
+            <h3 class="text-2xl font-bold mb-6">Add New Administrator</h3>
+            <form id="adminForm" onsubmit="saveAdmin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Full Name</label>
+                    <input type="text" id="adminName" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Username</label>
+                    <input type="text" id="adminUsername" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Email</label>
+                    <input type="email" id="adminEmail" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none">
+                </div>
+                <div>
+                     <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Password</label>
+                     <input type="text" id="adminPassword" required class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary outline-none" placeholder="Enter password...">
+                </div>
+                
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeAdminModal()" class="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-primary text-black hover:bg-white rounded-xl font-bold transition-colors">Create Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ... (Existing Scripts) ...
+
+        // --- ADMINS ---
+        function loadAdmins() {
+             fetch('/Admin/GetAdminsData')
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('admins-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(user => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="p-4 font-bold flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center text-xs font-bold">
+                                        ${user.fullName ? user.fullName.charAt(0) : 'A'}
+                                    </div>
+                                    ${user.fullName || 'Admin'}
+                                </td>
+                                <td class="p-4 text-gray-400">${user.email}</td>
+                                <td class="p-4 font-mono text-primary">${user.password || '<span class="text-xs text-gray-500">Encrypted</span>'}</td>
+                                <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-bold bg-red-500/10 text-red-500">${user.role}</span></td>
+                                <td class="p-4 text-xs">${user.joined}</td>
+                                <td class="p-4 text-xs font-mono text-green-400">${user.lastLogin}</td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminModal').classList.add('flex');
+        }
+
+        function closeAdminModal() {
+             document.getElementById('adminModal').classList.add('hidden');
+             document.getElementById('adminModal').classList.remove('flex');
+        }
+
+        function saveAdmin(e) {
+            e.preventDefault();
+            
+            const admin = {
+                FullName: document.getElementById('adminName').value,
+                Username: document.getElementById('adminUsername').value,
+                Email: document.getElementById('adminEmail').value,
+                PlainPassword: document.getElementById('adminPassword').value
+            };
+
+            fetch('/Admin/AddAdmin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(admin)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    closeAdminModal();
+                    loadAdmins();
+                    alert('New admin added successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+
+
+        // --- HISTORY ---
+        function loadHistory() {
+             fetch('/Admin/GetHistoryData')
+                .then(r => r.json())
+                .then(data => {
+                    const tbody = document.getElementById('history-table-body');
+                    tbody.innerHTML = '';
+                    data.forEach(day => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="p-4 text-gray-400 font-mono">${day.date}</td>
+                                <td class="p-4 font-bold">${day.totalOrders}</td>
+                                <td class="p-4">${day.totalReservations}</td>
+                                <td class="p-4 font-bold text-green-500">$${day.totalRevenue.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function clearHistory() {
+            if(!confirm('WARNING: This will delete ALL historical report data. This cannot be undone. Continue?')) return;
+            fetch('/Admin/ClearAllHistory', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    loadHistory();
+                    alert('History cleared successfully.');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+        function loadMessages() {
+             fetch('/Admin/GetMessages') // Uses existing endpoint if exists, checking controller... Use GetMessages
+                .then(r => r.json())
+                .then(data => {
+                    const container = document.getElementById('messages-container');
+                    container.innerHTML = '';
+                    data.forEach(msg => {
+                        container.innerHTML += `
+                            <div class="bg-[#0F0F0F] border ${msg.isRead ? 'border-white/5' : 'border-primary/50'} p-4 rounded-xl flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h4 class="font-bold">${msg.fullName}</h4>
+                                        ${!msg.isRead ? '<span class="text-[10px] bg-primary text-black px-1.5 rounded font-bold">NEW</span>' : ''}
+                                    </div>
+                                    <p class="text-xs text-primary mb-2">${msg.email}</p>
+                                    <p class="text-gray-300 text-sm">${msg.message}</p>
+                                </div>
+                                ${!msg.isRead ? `<button onclick="markRead(${msg.id})" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded">Mark Read</button>` : ''}
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        function markRead(id) {
+             fetch('/Admin/MarkMessageRead?id=' + id, { method: 'POST' })
+            .then(r => r.json())
+            .then(d => { if(d.success) loadMessages(); });
+        }
+
+        function clearMessages() {
+            if(!confirm('Are you sure you want to DELETE ALL messages? This cannot be undone.')) return;
+            fetch('/Admin/ClearAllMessages', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    loadMessages();
+                    alert('All messages cleared successfully.');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+
+        function saveMenuItem(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('itemId').value;
+            const item = {
+                id: id ? parseInt(id) : 0,
+                name: document.getElementById('itemName').value,
+                price: parseFloat(document.getElementById('itemPrice').value),
+                category: document.getElementById('itemCategory').value,
+                imageUrl: document.getElementById('itemImage').value,
+                description: document.getElementById('itemDescription').value,
+                isAvailable: true
+            };
+
+            const url = id ? '/Admin/UpdateMenuItem' : '/Admin/AddMenuItem';
+            
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(item)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    closeMenuModal();
+                    loadMenuItems();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+        function deleteItem(id) {
+            if(!confirm('Are you sure you want to delete this item?')) return;
+            
+            fetch('/Admin/DeleteMenuItem?id=' + id, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if(data.success) {
+                    loadMenuItems();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+
+        // INITIAL LOAD
+        document.addEventListener('DOMContentLoaded', () => {
+           // Auto-load dashboard stats or just default to dashboard tab view
+           // The dashboard view is static for now (loaded via ViewBag), so no fetch needed immediately.
+           // Maybe animate entry?
+        });
+
+    </script>
+</body>
+</html>
