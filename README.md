@@ -1,265 +1,124 @@
-# 🍽️ FoodHeaven - Restaurant Management System
+# FoodHeaven 🍽️
 
-## Overview
-**FoodHeaven** is a modern, full-stack restaurant website built with **ASP.NET Core MVC** and **Entity Framework Core**. It features a beautiful, responsive UI with complete backend functionality for menu management, online ordering, table reservations, contact management, and customer loyalty programs.
+> **Experience Culinary Excellence.**  
+> A premium, full-stack restaurant management system built with **ASP.NET Core MVC** and **Tailwind CSS**.
 
-## ✨ Features
+![FoodHeaven Banner](https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop)
 
-### Customer Features
-- 🏠 **Home Page** - Beautiful hero section with featured menu items
-- 📖 **Menu System** - Browse and filter menu items by category
-- 🛒 **Shopping Cart** - Add items, update quantities, apply promo codes
-- 📅 **Table Reservations** - Book tables with date, time, and party size selection
-- 📧 **Contact Form** - Send inquiries and special requests
-- 🎁 **Loyalty Program** - Earn and redeem points, track punch cards
-- 🌙 **Dark Mode** - Toggle between light and dark themes
+## 📖 Overview
 
-### Admin Features
-- 🔐 **Secure Login** - Cookie-based authentication
-- 📊 **Dashboard** - View revenue, pending orders, and stats
-- 📝 **Menu Management** - Full CRUD operations for menu items
-- 📦 **Order Management** - Track and update order status
-- 💬 **Message Management** - View and respond to customer inquiries
+**FoodHeaven** is a modern, responsive web application designed for high-end restaurants. It bridges the gap between customer engagement and restaurant operations, offering a stunning public-facing interface for diners and a powerful, mobile-responsive dashboard for administrators.
 
-## 🛠️ Technology Stack
-
-### Backend
-- ASP.NET Core 8.0 MVC
-- Entity Framework Core 8.0
-- SQL Server (LocalDB)
-- BCrypt for password hashing
-- Cookie Authentication
-
-### Frontend
-- Tailwind CSS
-- Vanilla JavaScript
-- Google Fonts (Plus Jakarta Sans, Noto Sans)
-- Material Symbols Icons
-- LocalStorage for cart persistence
-
-## 📋 Prerequisites
-
-- .NET 8.0 SDK or higher
-- SQL Server LocalDB (included with Visual Studio)
-- Visual Studio 2022 or VS Code
-- Modern web browser
-
-## 🚀 Getting Started
-
-### 1. Clone or Download the Project
-The project is located at: `C:\Users\RB Tech\Desktop\Restaurant Website`
-
-### 2. Restore NuGet Packages
-```powershell
-cd "C:\Users\RB Tech\Desktop\Restaurant Website"
-dotnet restore
-```
-
-### 3. Create the Database
-Run Entity Framework migrations to create the database:
-
-```powershell
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
-**Note:** If you don't have `dotnet ef` tools installed, run:
-```powershell
-dotnet tool install --global dotnet-ef
-```
-
-### 4. Run the Application
-```powershell
-dotnet run
-```
-
-The application will start on `https://localhost:5001` (or the port shown in terminal).
-
-### 5. Access the Admin Panel
-- Navigate to: `https://localhost:5001/Admin/Login`
-- **Default Credentials:**
-  - Username: `admin`
-  - Password: `Admin@123`
-
-## 📁 Project Structure
-
-```
-FoodHeaven/
-├── Controllers/           # MVC Controllers
-│   ├── HomeController.cs
-│   ├── MenuController.cs
-│   ├── OrderController.cs
-│   ├── ReservationController.cs
-│   ├── ContactController.cs
-│   ├── LoyaltyController.cs
-│   └── AdminController.cs
-├── Data/                  # Database Context
-│   └── ApplicationDbContext.cs
-├── Models/                # Entity Models
-│   ├── MenuItem.cs
-│   ├── Order.cs
-│   ├── Reservation.cs
-│   ├── ContactMessage.cs
-│   ├── LoyaltyAccount.cs
-│   └── Admin.cs
-├── Views/                 # Razor Views
-│   ├── Home/
-│   ├── Shared/
-│   └── _ViewImports.cshtml
-├── wwwroot/               # Static Files
-│   ├── css/
-│   │   └── site.css
-│   └── js/
-│       └── app.js
-├── appsettings.json       # Configuration
-├── Program.cs             # App Configuration
-└── FoodHeaven.csproj      # Project File
-```
-
-## 🗄️ Database Schema
-
-### Tables
-1. **MenuItems** - Restaurant menu items
-2. **Orders** - Customer orders
-3. **OrderItems** - Individual items in orders
-4. **Reservations** - Table bookings
-5. **ContactMessages** - Customer inquiries
-6. **LoyaltyAccounts** - Customer rewards accounts
-7. **LoyaltyTransactions** - Points history
-8. **Admins** - Admin users
-
-## 🎨 Customization
-
-### Change Database Connection
-Edit `appsettings.json`:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Your Connection String Here"
-  }
-}
-```
-
-### Add Menu Items
-- **Via Admin Panel:** Login → Dashboard → Add New Item
-- **Via Database:** Seed data in `ApplicationDbContext.cs`
-
-### Modify Colors/Theme
-Edit Tailwind config in `Views/Shared/_Layout.cshtml`:
-```javascript
-colors: {
-    "primary": "#F2B90D",  // Change to your brand color
-    // ... other colors
-}
-```
-
-## 🔐 Security Features
-
-- Passwords hashed with BCrypt
-- Anti-forgery tokens on forms
-- Cookie authentication with configurable expiration
-- SQL injection protection via EF Core
-- XSS protection with Razor encoding
-
-## 📱 Responsive Design
-
-- Mobile-first approach
-- Breakpoints:
-  - Mobile: < 768px
-  - Tablet: 768px - 1023px
-  - Desktop: ≥ 1024px
-- Touch-optimized controls
-- Smooth animations and transitions
-
-## 🧪 Testing the Features
-
-### Test Cart Functionality
-1. Go to Menu page
-2. Click "Add" on any item
-3. View cart at `/Order/Cart`
-4. Update quantities
-5. Apply promo code: `SAVE10`, `SAVE20`, or `FIRST15`
-6. Place order
-
-### Test Reservations
-1. Navigate to `/Reservation/Create`
-2. Select date, time, party size
-3. Choose table from floor plan
-4. Fill in contact details
-5. Confirm reservation
-
-### Test Loyalty Program
-1. Visit `/Loyalty`
-2. View points and rewards
-3. Try redeeming rewards (requires sufficient points)
-
-## 🐛 Troubleshooting
-
-### Database Issues
-```powershell
-# Delete and recreate database
-dotnet ef database drop
-dotnet ef database update
-```
-
-### Port Already in Use
-Edit `Properties/launchSettings.json` to change ports.
-
-### JavaScript Not Loading
-Clear browser cache and ensure `app.js` is in `wwwroot/js/`
-
-## 📦 NuGet Packages
-
-- Microsoft.EntityFrameworkCore.SqlServer (8.0.0)
-- Microsoft.EntityFrameworkCore.Tools (8.0.0)
-- Microsoft.AspNetCore.Authentication.Cookies (2.2.0)
-- BCrypt.Net-Next (4.0.3)
-
-## 🌟 Future Enhancements
-
-- Payment gateway integration
-- Email notifications
-- Real-time order tracking
-- Customer accounts and authentication
-- Reviews and ratings system
-- Multi-language support
-- Mobile app (React Native/Flutter)
-
-## 📄 License
-
-This project is created for educational and demonstration purposes.
-
-## 👨‍💻 Developer Notes
-
-### API Endpoints
-
-#### Menu
-- `GET /Menu/GetMenuItems?category={category}` - Get filtered menu items
-
-#### Orders
-- `POST /Order/Create` - Create new order
-- `POST /Order/UpdateStatus` - Update order status
-- `GET /Order/ApplyPromoCode` - Validate promo code
-
-#### Loyalty
-- `POST /Loyalty/RedeemReward` - Redeem points
-- `POST /Loyalty/AddPoints` - Add points to account
-- `GET /Loyalty/GetHistory` - Get transaction history
-
-#### Admin
-- `POST /Admin/AddMenuItem` - Add menu item
-- `POST /Admin/UpdateMenuItem` - Update menu item
-- `POST /Admin/DeleteMenuItem` - Delete menu item
-- `GET /Admin/GetOrders?status={status}` - Get orders by status
-
-## 📞 Support
-
-For issues or questions, please check:
-1. Ensure all NuGet packages are restored
-2. Verify database is created and seeded
-3. Check browser console for JavaScript errors
-4. Verify .NET 8 SDK is installed
+Whether you are booking a table for a romantic dinner, ordering your favorite meal online, or managing the day-to-day chaos of a busy kitchen, FoodHeaven makes it seamless.
 
 ---
 
-**Built with ❤️ using ASP.NET  Core MVC**
+## ✨ Key Features
+
+### 🌍 Public Interface (Customer)
+*   **Stunning UI/UX**: Built with a "dark mode first" premium aesthetic, featuring smooth parallax scroll, glassmorphism, and micro-animations.
+*   **Dynamic Menu**: Browse items by category (Starters, Mains, Desserts, Drinks) with instant search and filtering.
+*   **Online Ordering**: Full shopping cart functionality with persistent local storage and order history tracking.
+*   **Table Reservations**: Real-time table booking system with party size and special requests.
+*   **Live Status**: Footer "Working Hours" indicator that dynamically updates (Open/Closed) based on the time of day.
+*   **Responsive Design**: Flawless experience on mobile, tablet, and desktop.
+
+### 🛡️ Admin Dashboard (Staff)
+*   **Mobile-First Control**: A fully responsive sidebar and grid layout that works perfectly on iPads and phones for staff on the move.
+*   **Menu Management**: Add, edit, or remove dishes, adjust prices, and update availability in real-time.
+*   **Order Command Center**: View incoming orders, update status (Pending -> Preparing -> Completed), and track revenue.
+*   **Reservation Book**: Manage upcoming bookings and optimize table turnover.
+*   **User Management**: View registered users and manage admin staff access.
+*   **Analytics**: Daily revenue reports, order counts, and historical data visualization.
+*   **Message Center**: Read and respond to customer inquiries from the contact form.
+
+---
+
+## 🚀 Tech Stack
+
+*   **Framework**: [.NET 8 (ASP.NET Core MVC)](https://dotnet.microsoft.com/)
+*   **Database**: Entity Framework Core with SQL Server
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) (CDN & Configured) + Custom CSS Variables
+*   **Frontend Logic**: Vanilla JavaScript (Zero-dependency, fast & lightweight)
+*   **Icons**: Google Material Symbols
+*   **Security**: BCrypt Password Hashing, Role-Based Authorization
+
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+*   [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
+*   SQL Server (LocalDB or Express)
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/yourusername/foodheaven.git
+    cd foodheaven
+    ```
+
+2.  **Configure Database**
+    Update the connection string in `appsettings.json` if necessary:
+    ```json
+    "ConnectionStrings": {
+      "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=FoodHeavenDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+    ```
+
+3.  **Run Migrations**
+    Initialize the database schema:
+    ```bash
+    dotnet ef database update
+    ```
+
+4.  **Start the Application**
+    ```bash
+    dotnet run
+    ```
+    Visit `http://localhost:5000` in your browser.
+
+---
+
+## 🔐 Admin Access
+
+The system automatically seeds default admin accounts on the first run.
+
+| Role | Username | Password |
+|------|----------|----------|
+| **Super Admin** | `admin` | `admin@123` |
+
+> **Note:** For security, please change these credentials after your first login via the Admin Dashboard.
+
+---
+
+## 🕒 Business Logic Details
+
+The application features smart schedule logic for the "Open Now" indicator:
+*   **Monday - Friday**: 11:00 AM – 02:00 AM (Next Day)
+*   **Saturday - Sunday**: 11:00 AM – 04:00 AM (Next Day)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  <small>Made with ❤️ by RB Tech</small>
+</p>
