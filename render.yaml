@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: foodheaven
-    env: docker
-    plan: free
-    envVars:
-      - key: RENDER
-        value: "true"

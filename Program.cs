@@ -9,27 +9,50 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add Database Context
-// Add Database Context
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
-                      builder.Configuration.GetConnectionString("DefaultConnection");
+// Database Configuration
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-if (Environment.GetEnvironmentVariable("RENDER") == "true")
+if (!string.IsNullOrEmpty(databaseUrl))
 {
-    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")))
+    // Railway/Cloud PostgreSQL Support
+    try 
     {
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+        var builderPostgres = new Npgsql.NpgsqlConnectionStringBuilder
+        {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/'),
+            SslMode = Npgsql.SslMode.Require,
+            TrustServerCertificate = true
+        };
+        
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+            options.UseNpgsql(builderPostgres.ToString()));
+            
+        Console.WriteLine("--> Connected to PostgreSQL (Railway)");
     }
-    else
+    catch (Exception ex)
     {
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        Console.WriteLine($"--> Error parsing DATABASE_URL: {ex.Message}");
+        // Fallback or re-throw? Let's fallback to SQLite just in case or throw.
+        throw new Exception("Failed to configure PostgreSQL from DATABASE_URL", ex);
+    }
+}
+else if (Environment.GetEnvironmentVariable("RAILWAY_ENVIRONMENT") != null)
+{
+    // Railway but no DB? specific SQLite fallback
+     builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite("Data Source=FoodHeaven.db"));
-    }
 }
 else
 {
+    // Local / Default SQL Server
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
 // Add Authentication
