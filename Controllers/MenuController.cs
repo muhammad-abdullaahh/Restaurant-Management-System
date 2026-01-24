@@ -559,13 +559,19 @@ namespace FoodHeaven.Controllers
                         using var transaction = await _context.Database.BeginTransactionAsync();
                         try 
                         {
-                            // Enable Identity Insert to force our IDs
-                            await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT MenuItems ON");
+                            // Enable Identity Insert only for SQL Server
+                            if (_context.Database.IsSqlServer())
+                            {
+                                await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT MenuItems ON");
+                            }
                             
                             await _context.MenuItems.AddRangeAsync(newItems);
                             await _context.SaveChangesAsync();
                             
-                            await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT MenuItems OFF");
+                            if (_context.Database.IsSqlServer())
+                            {
+                                await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT MenuItems OFF");
+                            }
                             await transaction.CommitAsync();
                         }
                         catch 
