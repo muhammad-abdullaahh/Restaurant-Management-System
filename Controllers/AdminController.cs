@@ -84,15 +84,21 @@ namespace FoodHeaven.Controllers
             var today = DateTime.Today;
             
             // Stats
+            // Stats
             ViewBag.TotalOrders = await _context.Orders.CountAsync();
             
-            var orderRevenue = await _context.Orders
+            // Fix for SQLite: Client-side aggregation
+            var orderTotals = await _context.Orders
                 .Where(o => o.Status == "Completed" || o.Status == "Delivered")
-                .SumAsync(o => (decimal?)o.Total) ?? 0;
+                .Select(o => (decimal?)o.Total)
+                .ToListAsync();
+            var orderRevenue = orderTotals.Sum() ?? 0;
 
-            var premiumRevenue = await _context.Reservations
+            var reservationCosts = await _context.Reservations
                 .Where(r => r.Status == "Completed")
-                .SumAsync(r => (decimal?)r.EstimatedCost) ?? 0;
+                .Select(r => (decimal?)r.EstimatedCost)
+                .ToListAsync();
+            var premiumRevenue = reservationCosts.Sum() ?? 0;
 
             ViewBag.TotalRevenue = orderRevenue + premiumRevenue;
             ViewBag.PremiumRevenue = premiumRevenue;
