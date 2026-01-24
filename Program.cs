@@ -10,15 +10,26 @@ builder.Services.AddControllersWithViews();
 
 // Add Database Context
 // Add Database Context
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
+                      builder.Configuration.GetConnectionString("DefaultConnection");
+
 if (Environment.GetEnvironmentVariable("RENDER") == "true")
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite("Data Source=FoodHeaven.db"));
+    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")))
+    {
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connectionString));
+    }
+    else
+    {
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlite("Data Source=FoodHeaven.db"));
+    }
 }
 else
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(connectionString));
 }
 
 // Add Authentication
