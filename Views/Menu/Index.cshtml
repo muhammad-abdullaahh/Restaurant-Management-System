@@ -1,6 +1,6 @@
 @model List<FoodHeaven.Models.MenuItem>
 @{
-    ViewData["Title"] = "Menu - FoodHeaven";
+    ViewData["Title"] = "Our Menu - FoodHeaven";
     
     var categoryIcons = new Dictionary<string, string> {
         { "Starters", "tapas" },
@@ -16,428 +16,487 @@
     };
 }
 
-<!-- AOS & Styles -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-<!-- Hero Section -->
-<div class="relative h-[45vh] min-h-[400px] w-full overflow-hidden flex items-center justify-center bg-zinc-900 group">
-    <div class="absolute inset-0 z-0 overflow-hidden">
-        <img src="~/images/restaurant_hero_bg.png" class="w-full h-full object-cover opacity-60 transform scale-105 group-hover:scale-100 transition-transform duration-[10s] ease-out" />
-        <div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-black/60"></div>
+<!-- Advanced 3D Hero Section -->
+<div class="relative h-[60vh] min-h-[500px] w-full overflow-hidden flex items-center justify-center bg-zinc-950 hero-container perspective-1000">
+    <div class="hero-bg absolute inset-0 z-0 transition-transform duration-700 ease-out scale-110">
+        <img src="~/images/restaurant_hero_bg.png" class="w-full h-full object-cover opacity-40" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-background-light dark:to-background-dark"></div>
     </div>
-    <div class="relative z-10 text-center px-4 mt-16 max-w-4xl">
-        <span class="text-primary font-bold tracking-[0.4em] uppercase mb-4 block animate-fade-in-down drop-shadow-lg">Taste The Extraordinary</span>
-        <h1 class="text-6xl md:text-8xl font-display font-black text-white mb-6 animate-fade-in-up drop-shadow-xl tracking-tight">Our Menu</h1>
-        <p class="text-white/90 text-xl font-light leading-relaxed animate-fade-in-up animation-delay-300 drop-shadow-md">
-             A culinary journey curated just for you. Fresh ingredients, masterful techniques, and unforgettable flavors in every bite.
+    
+    <!-- Floating Particles -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+        <div class="absolute top-[20%] left-[15%] animate-float"><span class="material-symbols-outlined text-[60px] text-primary">lunch_dining</span></div>
+        <div class="absolute top-[60%] right-[10%] animate-float-delayed"><span class="material-symbols-outlined text-[80px] text-primary">local_bar</span></div>
+        <div class="absolute top-[30%] right-[25%] animate-float opacity-50"><span class="material-symbols-outlined text-[40px] text-white">star</span></div>
+        <div class="absolute bottom-[20%] left-[30%] animate-float-delayed opacity-50"><span class="material-symbols-outlined text-[50px] text-white">restaurant_menu</span></div>
+    </div>
+
+    <div class="hero-content relative z-10 text-center px-4 max-w-5xl space-y-6 transition-transform duration-700 ease-out">
+        <div class="opacity-0 animate-fade-in-down">
+            <span class="px-8 py-3 rounded-full border border-primary/40 text-primary bg-black/40 backdrop-blur-2xl text-xs font-black uppercase tracking-[0.5em] shadow-[0_0_30px_rgba(242,185,13,0.2)]">
+                The Master Selection
+            </span>
+        </div>
+        <h1 class="text-7xl md:text-[120px] font-display font-black text-white leading-[0.9] opacity-0 animate-fade-in-up animation-delay-300 drop-shadow-2xl">
+            Taste <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-200 italic">Perfection</span>
+        </h1>
+        <p class="text-xl md:text-3xl text-white/80 font-light max-w-3xl mx-auto opacity-0 animate-fade-in-up animation-delay-500 leading-relaxed">
+            Experience culinary artistry designed to awaken every sense.
         </p>
     </div>
 </div>
 
-<!-- Main Layout -->
-<main class="container mx-auto px-4 py-16 flex flex-col lg:flex-row gap-12 relative z-20 -mt-20">
-    
-    <!-- Sidebar (Desktop) -->
-    <aside class="hidden lg:block w-80 shrink-0 sticky top-28 h-fit z-30" data-aos="fade-right" data-aos-delay="100">
-        <div class="rounded-3xl bg-white/90 dark:bg-card-dark/90 backdrop-blur-xl p-6 shadow-2xl border border-white/20 dark:border-white/5 ring-1 ring-black/5">
-            <h3 class="mb-6 text-2xl font-black text-text-main dark:text-white border-b-2 border-primary/20 pb-4 pl-2 flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">category</span> Categories
-            </h3>
-            <div class="flex flex-col gap-2 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                <a href="/Menu" class="group flex items-center justify-between rounded-2xl px-5 py-4 transition-all duration-300 @(ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory) ? "bg-gradient-to-r from-primary to-primary/80 text-black font-bold shadow-lg shadow-primary/30 scale-100" : "hover:bg-gray-100 dark:hover:bg-white/10 text-text-main/70 dark:text-white/70 hover:translate-x-2")">
-                    <span class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[24px]">restaurant_menu</span>
-                        <span class="text-lg">All Items</span>
-                    </span>
-                    <span class="@(ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory) ? "bg-black/20 text-black" : "bg-gray-200 dark:bg-white/10") text-xs px-2.5 py-1 rounded-full font-bold">@Model.Count</span>
-                </a>
-                @if (ViewBag.Categories != null)
+<!-- Main Layout (No Sidebar, Maximum Efficiency) -->
+<main class="container mx-auto px-4 py-12 relative z-20 -mt-10">
+
+    @if ((ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory)) && Model.Any())
+    {
+        <!-- Bento Grid for Trending Flavors -->
+        <div class="mb-24 reveal">
+            <div class="text-center mb-12">
+                <span class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-3 block">Chef's Recommendations</span>
+                <h2 class="text-5xl md:text-6xl font-black text-text-main dark:text-white tracking-tighter">Trending <span class="italic">Flavors</span></h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-rows-[300px]">
+                @{
+                    var random = new Random();
+                    var trending = Model.OrderByDescending(m => m.Rating).Take(10).OrderBy(x => random.Next()).Take(3).ToList();
+                }
+                @for (int i = 0; i < trending.Count; i++)
                 {
-                    @foreach (var category in ViewBag.Categories)
-                    {
-                        var categoryCount = Model.Count(m => m.Category == category);
-                        var icon = categoryIcons.ContainsKey(category) ? categoryIcons[category] : "lunch_dining";
+                    var item = trending[i];
+                    var gridClass = i == 0 ? "lg:col-span-2 lg:row-span-2 min-h-[400px] lg:h-[624px]" : "lg:col-span-1 lg:row-span-1 min-h-[300px] lg:h-[300px]";
+                    var titleSize = i == 0 ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl";
+
+                    <div onclick="openProductModal(this, event)" class="trending-card group cursor-pointer relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-700 hover:shadow-primary/30 hover:-translate-y-2 @gridClass z-10"
+                         data-id="@item.Id" data-name="@item.Name" data-price="@item.Price" data-image="@item.ImageUrl" data-rating="@item.Rating" data-description="@item.Description">
                         
-                        <a href="/Menu?category=@category" class="group flex items-center justify-between rounded-2xl px-5 py-4 transition-all duration-300 @(ViewBag.SelectedCategory == category ? "bg-gradient-to-r from-primary to-primary/80 text-black font-bold shadow-lg shadow-primary/30 scale-100" : "hover:bg-gray-100 dark:hover:bg-white/10 text-text-main/70 dark:text-white/70 hover:translate-x-2")">
-                            <span class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">@icon</span>
-                                <span class="text-lg">@category</span>
-                            </span>
-                             <span class="@(ViewBag.SelectedCategory == category ? "bg-black/20 text-black" : "bg-gray-200 dark:bg-white/10") text-xs px-2.5 py-1 rounded-full font-bold">@categoryCount</span>
-                        </a>
-                    }
-                }
-            </div>
-        </div>
-        
-        <!-- Interactive Promo Banner -->
-        <div class="mt-8 rounded-3xl relative overflow-hidden group shadow-2xl cursor-pointer transform hover:scale-[1.02] transition-all duration-500">
-             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style="background-image: url('/images/about_gallery_4.jpg')"></div>
-             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
-             <div class="relative z-10 p-8 text-center text-white">
-                 <div class="inline-block p-3 rounded-full bg-primary/20 backdrop-blur-md mb-4 animate-bounce">
-                     <span class="material-symbols-outlined text-4xl text-primary">event_seat</span>
-                 </div>
-                 <h4 class="text-2xl font-black mb-2">Book Your Table</h4>
-                 <p class="text-sm text-gray-200 mb-6 font-medium">Secure the best spot for an unforgettable dining experience.</p>
-                 <a href="/Reservation/Create" class="block w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-primary transition-colors shadow-lg block text-center">Reserve Now</a>
-             </div>
-        </div>
-    </aside>
-
-    <!-- Content Area -->
-    <div class="flex-1 min-w-0">
-        
-        <!-- Mobile Pills -->
-        <div class="lg:hidden w-full overflow-x-auto no-scrollbar mb-8 -mx-4 px-4 sticky top-[70px] z-30 pb-4">
-             <div class="bg-white/80 dark:bg-card-dark/80 backdrop-blur-lg rounded-2xl p-2 shadow-lg ring-1 ring-black/5 flex gap-2 min-w-max">
-                <a href="/Menu" class="flex items-center gap-2 rounded-xl px-4 py-2 transition-all @(ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory) ? "bg-primary text-black font-bold shadow-md" : "hover:bg-gray-100 dark:hover:bg-white/10 text-text-main dark:text-white font-medium")">
-                    All
-                </a>
-                @if (ViewBag.Categories != null)
-                {
-                    @foreach (var category in ViewBag.Categories)
-                    {
-                         <a href="/Menu?category=@category" class="flex items-center gap-2 rounded-xl px-4 py-2 transition-all @(ViewBag.SelectedCategory == category ? "bg-primary text-black font-bold shadow-md" : "hover:bg-gray-100 dark:hover:bg-white/10 text-text-main dark:text-white font-medium")">
-                            @category
-                        </a>
-                    }
-                }
-            </div>
-        </div>
-
-        <!-- Mobile Promo Banner -->
-        <div class="lg:hidden mb-8 rounded-3xl relative overflow-hidden group shadow-xl">
-             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/about_gallery_4.jpg')"></div>
-             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
-             <div class="relative z-10 p-6 text-center text-white">
-                 <div class="inline-block p-3 rounded-full bg-primary/20 backdrop-blur-md mb-3">
-                     <span class="material-symbols-outlined text-3xl text-primary">event_seat</span>
-                 </div>
-                 <h4 class="text-xl font-black mb-1">Book Your Table</h4>
-                 <p class="text-xs text-gray-200 mb-4 font-medium">Secure the best spot for an unforgettable dining experience.</p>
-                 <a href="/Reservation/Create" class="block w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-primary transition-colors shadow-lg text-center">Reserve Now</a>
-             </div>
-        </div>
-
-        @if ((ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory)) && Model.Any())
-        {
-            <!-- Trending Section (Only on All Items) -->
-            <div class="mb-12" data-aos="fade-up">
-                <div class="flex items-end justify-between mb-6">
-                    <div>
-                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Loved</span>
-                        <h2 class="text-3xl font-black text-text-main dark:text-white">Trending Now</h2>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    @{
-                        // Pick 3 random high rated items
-                        var random = new Random();
-                        var trending = Model.OrderByDescending(m => m.Rating).Take(10).OrderBy(x => random.Next()).Take(3).ToList();
-                    }
-                    @foreach (var item in trending)
-                    {
-                        <div onclick="openProductModal(this, event)" class="group cursor-pointer relative h-64 md:h-80 rounded-3xl overflow-hidden shadow-xl"
-                             data-id="@item.Id" data-name="@item.Name" data-price="@item.Price" data-image="@item.ImageUrl" data-rating="@item.Rating" data-description="@item.Description">
-                            <img src="@item.ImageUrl" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 right-0 p-6">
-                                <div class="flex items-center gap-2 mb-2">
-                                     <span class="bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded uppercase">Trending</span>
-                                     <div class="flex text-primary text-xs"><span class="material-symbols-outlined text-[14px] fill-current">star</span> @item.Rating</div>
-                                </div>
-                                <h3 class="text-xl font-bold text-white mb-1">@item.Name</h3>
-                                <p class="text-white/70 text-sm line-clamp-1 mb-3">@item.Description</p>
-                                <div class="flex justify-between items-center mt-2">
-                                    <span class="text-xl font-bold text-primary">$@item.Price.ToString("F2")</span>
-                                    <button onclick="quickAdd(this, event)" class="bg-white text-black px-4 py-2 rounded-full font-bold text-sm hover:bg-primary transition-colors shadow-lg flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-
-        <!-- Menu Grid -->
-        <h2 class="text-xl font-bold text-text-main dark:text-white mb-6 uppercase tracking-wider opacity-60">Full Menu Selection</h2>
-
-        @if (Model != null && Model.Any())
-        {
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                @foreach (var item in Model)
-                {
-                    <div data-aos="fade-up" data-aos-offset="50"
-                         onclick="openProductModal(this, event)" 
-                         class="group bg-white dark:bg-card-dark rounded-[2.5rem] p-4 shadow-soft dark:shadow-none hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 cursor-pointer border border-transparent hover:border-primary/20 relative"
-                         data-id="@item.Id"
-                         data-name="@item.Name"
-                         data-price="@item.Price"
-                         data-image="@item.ImageUrl"
-                         data-rating="@item.Rating"
-                         data-description="@item.Description">
-                         
-                        <!-- Image -->
-                        <div class="relative h-56 rounded-[2rem] overflow-hidden mb-4 shadow-md bg-gray-100 dark:bg-zinc-900">
-                             <img src="@item.ImageUrl" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                             <!-- Quick Add Button Removed -->
+                        <img src="@item.ImageUrl" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <!-- Floating Price Badge -->
+                        <div class="absolute top-6 right-6 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-black px-6 py-3 rounded-full shadow-2xl transform group-hover:scale-110 transition-transform duration-500 z-30">
+                            $@item.Price.ToString("F0")
                         </div>
 
-                        <!-- Info -->
-                        <div class="px-2 pb-2">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-xl font-bold text-text-main dark:text-white leading-tight pr-2 group-hover:text-primary transition-colors">@item.Name</h3>
-                                <span class="text-xl font-black text-text-main dark:text-white">$@item.Price.ToString("F0")</span>
+                        <div class="absolute bottom-0 left-0 right-0 p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 z-30 pointer-events-none">
+                            <div class="flex items-center gap-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                                 <span class="bg-primary text-black text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(242,185,13,0.5)]">Highly Rated</span>
+                                 <div class="flex items-center gap-1 text-primary text-sm font-black bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"><span class="material-symbols-outlined text-[18px] fill-current">star</span> @item.Rating</div>
                             </div>
-                            <p class="text-text-main/50 dark:text-white/50 text-sm line-clamp-2 mb-4 font-medium h-10">@item.Description</p>
+                            <h3 class="@titleSize font-black text-white mb-2 leading-none drop-shadow-2xl tracking-tight">@item.Name</h3>
+                            <p class="text-white/70 text-sm line-clamp-2 mb-6 font-light max-w-md">@item.Description</p>
                             
-                            <!-- Rating & Action -->
-                            <div class="flex justify-between items-center mt-4">
-                                <div class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[18px] text-yellow-500 fill-current">star</span>
-                                    <span class="font-bold text-text-main dark:text-white">@item.Rating</span>
-                                </div>
-                                <button onclick="quickAdd(this, event)" class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center gap-2 hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black">
-                                    Add <span class="material-symbols-outlined text-sm">add</span>
-                                </button>
-                            </div>
+                            <button onclick="quickAdd(this, event)" class="pointer-events-auto bg-primary text-black px-8 py-4 rounded-full font-black hover:scale-105 transition-all duration-300 shadow-[0_5px_15px_rgba(242,185,13,0.3)] hover:shadow-[0_0_20px_rgba(242,185,13,0.5)] flex items-center justify-center gap-3 active:scale-95">
+                                <span>Add to Order</span>
+                                <span class="material-symbols-outlined text-xl">add_shopping_cart</span>
+                            </button>
                         </div>
                     </div>
                 }
             </div>
-        }
-        else
-        {
-             <div class="text-center py-20 bg-gray-50 dark:bg-white/5 rounded-[3rem] border-2 border-dashed border-gray-200 dark:border-white/10">
-                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gray-100 dark:bg-white/10 mb-6 text-gray-400">
-                    <span class="material-symbols-outlined text-5xl">manage_search</span>
+        </div>
+    }
+
+    <!-- Efficient Sticky Category & Search Bar -->
+    <div class="sticky top-[80px] z-40 mb-12 reveal">
+        <div class="bg-white/80 dark:bg-card-dark/80 backdrop-blur-3xl rounded-[2.5rem] p-3 shadow-2xl border border-black/5 dark:border-white/5 flex flex-col xl:flex-row items-center justify-between gap-4">
+            
+            <!-- Horizontal Categories (Scrollable) -->
+            <div class="w-full xl:w-auto flex-1 overflow-x-auto no-scrollbar pb-2 xl:pb-0">
+                <div class="flex gap-2 min-w-max px-2">
+                    <a href="/Menu" class="group flex items-center gap-2 rounded-full px-6 py-3.5 transition-all duration-300 @(ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory) ? "bg-primary text-black font-black shadow-[0_5px_15px_rgba(242,185,13,0.3)]" : "bg-gray-100 dark:bg-white/5 text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-white/10 font-bold")">
+                        <span class="material-symbols-outlined text-[20px]">restaurant_menu</span> All
+                    </a>
+                    <a href="/Menu?category=Deals" class="group flex items-center gap-2 rounded-full px-6 py-3.5 transition-all duration-300 @(ViewBag.SelectedCategory == "Deals" ? "bg-primary text-black font-black shadow-[0_5px_15px_rgba(242,185,13,0.3)]" : "bg-gray-100 dark:bg-white/5 text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-white/10 font-bold")">
+                        <span class="material-symbols-outlined text-[20px]">rocket_launch</span> Deals
+                    </a>
+                    @if (ViewBag.Categories != null)
+                    {
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            var icon = categoryIcons.ContainsKey(category) ? categoryIcons[category] : "lunch_dining";
+                            <a href="/Menu?category=@category" class="group flex items-center gap-2 rounded-full px-6 py-3.5 transition-all duration-300 @(ViewBag.SelectedCategory == category ? "bg-primary text-black font-black shadow-[0_5px_15px_rgba(242,185,13,0.3)]" : "bg-gray-100 dark:bg-white/5 text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-white/10 font-bold")">
+                                <span class="material-symbols-outlined text-[20px]">@icon</span> @category
+                            </a>
+                        }
+                    }
                 </div>
-                <h3 class="text-3xl font-bold text-text-main dark:text-white mb-2">No Items Found</h3>
-                <p class="text-text-muted text-lg max-w-md mx-auto">We couldn't find any items matching your selection.</p>
-                <a href="/Menu" class="mt-8 inline-block px-8 py-4 bg-black text-white font-bold rounded-2xl hover:scale-105 transition-transform shadow-lg">View All Menu</a>
             </div>
-        }
+
+            <!-- Live Search & Counter -->
+            <div class="w-full xl:w-auto flex items-center gap-4 px-2">
+                <span class="hidden md:inline-block text-sm font-bold text-text-muted whitespace-nowrap bg-gray-100 dark:bg-white/5 px-4 py-2 rounded-full" id="itemCountDisplay">@Model.Count Items</span>
+                
+                <div class="relative w-full md:w-[300px] group flex-shrink-0">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-xl">search</span>
+                    </div>
+                    <input type="text" id="menuSearch" placeholder="Search flavors..." 
+                           class="w-full bg-gray-100 dark:bg-white/5 rounded-full py-3.5 pl-12 pr-6 border-2 border-transparent hover:border-gray-300 dark:hover:border-white/20 focus:bg-white dark:focus:bg-black focus:border-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium text-text-main dark:text-white text-base" />
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <!-- Premium Deals Section -->
+    @if (ViewBag.Deals != null && ((List<FoodHeaven.Models.Deal>)ViewBag.Deals).Any() && (ViewBag.SelectedCategory == "All" || string.IsNullOrEmpty(ViewBag.SelectedCategory) || ViewBag.SelectedCategory == "Deals"))
+    {
+        <div class="mb-24 reveal">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <span class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-3 block">Limited Time Offers</span>
+                    <h2 class="text-5xl md:text-6xl font-black text-text-main dark:text-white tracking-tighter">Exclusive <span class="italic text-primary">Deals</span></h2>
+                </div>
+                <div class="hidden md:flex gap-3">
+                    <button onclick="scrollDeals('left')" class="size-14 rounded-full border-2 border-gray-200 dark:border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-black transition-all group shadow-xl">
+                        <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                    </button>
+                    <button onclick="scrollDeals('right')" class="size-14 rounded-full bg-primary text-black flex items-center justify-center hover:scale-110 transition-all shadow-xl shadow-primary/20">
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="dealsScrollContainer" class="flex gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4">
+                @foreach (var deal in (List<FoodHeaven.Models.Deal>)ViewBag.Deals)
+                {
+                    <div class="min-w-[350px] md:min-w-[400px] group relative bg-white dark:bg-card-dark rounded-[3rem] overflow-hidden border-2 border-transparent hover:border-primary/40 transition-all duration-700 shadow-xl hover:shadow-primary/10">
+                        <!-- Image & Badge -->
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="@deal.ImageUrl" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                            
+                            <div class="absolute top-6 left-6 px-5 py-2 bg-primary text-black font-black text-xs rounded-full uppercase tracking-widest shadow-2xl">
+                                @deal.Tag
+                            </div>
+                            
+                            <div class="absolute bottom-6 right-6 flex flex-col items-end">
+                                @if (deal.OriginalPrice.HasValue)
+                                {
+                                    <span class="text-white/60 line-through text-sm font-bold">$@deal.OriginalPrice.Value.ToString("F2")</span>
+                                }
+                                <span class="text-primary text-3xl font-black drop-shadow-lg">$@deal.Price.ToString("F2")</span>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-8">
+                            <h3 class="text-2xl font-black text-text-main dark:text-white mb-3 group-hover:text-primary transition-colors tracking-tight">@deal.Title</h3>
+                            <p class="text-text-muted text-sm font-medium leading-relaxed mb-8 line-clamp-2">@deal.Description</p>
+                            
+                            <button onclick="quickAddDeal(@deal.Id, '@deal.Title', @deal.Price, '@deal.ImageUrl', this, event)" 
+                                    class="w-full py-4 bg-gray-100 dark:bg-white/5 text-text-main dark:text-white hover:bg-primary hover:text-black font-black rounded-2xl transition-all flex items-center justify-center gap-2 group/btn">
+                                <span>Claim Deal</span>
+                                <span class="material-symbols-outlined text-xl group-hover/btn:translate-x-1 transition-transform">rocket_launch</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Animated Menu Grid -->
+    @if (Model != null && Model.Any() && ViewBag.SelectedCategory != "Deals")
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="menuGridContainer">
+            @{ int delay = 0; }
+            @foreach (var item in Model)
+            {
+                <div onclick="openProductModal(this, event)" 
+                     class="menu-item-card group bg-white dark:bg-card-dark rounded-[2.5rem] p-5 shadow-lg hover:shadow-[0_15px_40px_-10px_rgba(242,185,13,0.3)] transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-primary/50 relative reveal z-10 flex flex-col h-full"
+                     style="transition-delay: @(delay)ms;"
+                     data-id="@item.Id" data-name="@item.Name" data-price="@item.Price" data-image="@item.ImageUrl" data-rating="@item.Rating" data-description="@item.Description">
+                     
+                    <!-- Image Container -->
+                    <div class="relative aspect-[4/3] rounded-[2rem] overflow-hidden mb-5 bg-gray-100 dark:bg-zinc-900 group-hover:shadow-xl transition-all duration-500">
+                         <img src="@item.ImageUrl" class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" loading="lazy" />
+                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                         
+                         <!-- Price Tag -->
+                         <div class="absolute top-4 right-4 bg-white/95 dark:bg-black/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl transform group-hover:-translate-y-1 transition-transform duration-300 border border-black/5 dark:border-white/10 z-20">
+                            <span class="text-text-main dark:text-white font-black text-lg">$@item.Price.ToString("F0")</span>
+                         </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="px-2 flex flex-col flex-grow relative z-20">
+                        <div class="flex items-center justify-between mb-2">
+                             <h3 class="text-2xl font-black text-text-main dark:text-white leading-tight group-hover:text-primary transition-colors tracking-tight line-clamp-1">@item.Name</h3>
+                        </div>
+                        <p class="text-text-muted text-sm line-clamp-2 mb-6 font-medium leading-relaxed flex-grow">@item.Description</p>
+                        
+                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100 dark:border-white/5 relative">
+                            <div class="flex items-center gap-1.5 text-text-main dark:text-white bg-gray-50 dark:bg-white/5 px-4 py-2 rounded-full">
+                                <span class="material-symbols-outlined text-[18px] text-primary fill-current drop-shadow-md">star</span>
+                                <span class="font-black text-sm">@item.Rating</span>
+                            </div>
+                            
+                            <button onclick="quickAdd(this, event)" class="pointer-events-auto w-auto px-6 py-3 rounded-full bg-primary text-black font-black hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_5px_10px_rgba(242,185,13,0.2)] hover:shadow-[0_0_15px_rgba(242,185,13,0.4)]">
+                                <span>Add</span> <span class="material-symbols-outlined text-[20px]">add</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                delay += 30; // Faster cascade for 4 columns
+            }
+        </div>
+    }
+    else if (ViewBag.SelectedCategory != "Deals")
+    {
+         <div class="text-center py-32 bg-gray-50 dark:bg-white/5 rounded-[4rem] border-2 border-dashed border-gray-200 dark:border-white/10 reveal">
+            <div class="size-32 mx-auto rounded-full bg-gray-100 dark:bg-white/10 mb-8 flex items-center justify-center text-gray-400">
+                <span class="material-symbols-outlined text-6xl animate-bounce">search_off</span>
+            </div>
+            <h3 class="text-4xl font-black text-text-main dark:text-white mb-4 tracking-tighter">No Flavors Found</h3>
+            <p class="text-text-muted text-xl max-w-md mx-auto font-light">We couldn't find any items matching your criteria. Try exploring another category.</p>
+            <a href="/Menu" class="mt-12 inline-flex items-center gap-2 px-10 py-5 bg-primary text-black font-black rounded-full hover:scale-110 transition-transform shadow-[0_10px_30px_rgba(242,185,13,0.3)]">
+                <span class="material-symbols-outlined">restart_alt</span> View All Dishes
+            </a>
+        </div>
+    }
 </main>
 
-
-<!-- Product Modal -->
-<!-- Product Modal -->
-<div id="productModal" class="fixed inset-0 z-[100] hidden">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500" onclick="closeProductModal()"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:w-[1100px] md:max-w-[95vw] h-[85vh] md:h-auto md:max-h-[85vh] bg-white dark:bg-zinc-900 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row transform transition-all duration-500 opacity-0 scale-95 ring-1 ring-white/10" id="modalContent">
+<!-- Interactive Product Modal -->
+<div id="productModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-2xl transition-opacity duration-500" onclick="closeProductModal()"></div>
+    <div class="relative w-full max-w-5xl bg-white dark:bg-zinc-900 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row transform transition-all duration-500 opacity-0 scale-95 border border-white/10" id="modalContent">
         
-        <!-- Image & Gallery (Left Side) - Interactive 3D -->
-        <div id="modalVisuals" class="w-full md:w-[45%] h-72 md:h-auto relative bg-zinc-900 group overflow-hidden" style="perspective: 1000px;">
-             <!-- Tilt Container -->
-             <div id="modalTiltContent" class="w-full h-full relative transition-transform duration-200 ease-out" style="transform-style: preserve-3d;">
-                 <img id="modalImage" src="" class="w-full h-full object-cover opacity-90 transition-transform duration-[3s] group-hover:scale-110" style="transform: translateZ(-50px) scale(1.1);" />
-                 
-                 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-80"></div>
-                 
-                 <!-- Mobile Close Button -->
-                 <button onclick="closeProductModal()" class="absolute top-6 left-6 p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all md:hidden border border-white/10 z-50">
-                     <span class="material-symbols-outlined">arrow_downward</span>
-                 </button>
+        <!-- Image & Visuals (Left) -->
+        <div class="w-full lg:w-1/2 relative h-[400px] lg:h-auto overflow-hidden group">
+             <img id="modalImage" src="" class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-125" />
+             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10"></div>
+             
+             <button onclick="closeProductModal()" class="absolute top-6 left-6 size-12 bg-black/20 hover:bg-black/50 backdrop-blur-xl rounded-full text-white transition-all flex items-center justify-center border border-white/20 z-50 hover:rotate-90">
+                 <span class="material-symbols-outlined text-2xl">close</span>
+             </button>
 
-                 <!-- Content Layer with Depth -->
-                 <div class="absolute bottom-10 left-8 right-8" style="transform: translateZ(50px);">
-                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-wider mb-4 shadow-lg animate-pulse">
-                        <span class="material-symbols-outlined text-sm text-primary">verified</span> Signature Dish
-                     </div>
-                     <h2 id="modalTitle" class="text-4xl md:text-5xl font-black text-white leading-none drop-shadow-2xl mb-3 shadow-black"></h2>
-                     <div class="flex items-center gap-2 text-white/90 text-sm font-medium bg-black/40 w-fit px-3 py-1 rounded-lg backdrop-blur-sm">
-                         <span class="material-symbols-outlined text-primary text-lg animate-bounce">local_fire_department</span>
-                         <span>Hot & Fresh</span>
-                         <span class="w-1 h-1 bg-white/50 rounded-full mx-1"></span>
-                         <span>Chef's Special</span>
-                     </div>
+             <div class="absolute bottom-10 left-10 right-10 z-20 pointer-events-none">
+                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-xl border border-primary/50 text-primary text-xs font-black uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(242,185,13,0.3)]">
+                    <span class="material-symbols-outlined text-sm animate-pulse">verified</span> Signature
                  </div>
+                 <h2 id="modalTitle" class="text-5xl md:text-6xl font-black text-white leading-none tracking-tighter drop-shadow-2xl"></h2>
              </div>
         </div>
 
-        <!-- Details (Right Side) -->
-        <div class="flex-1 p-8 md:p-12 flex flex-col h-full bg-white dark:bg-[#121212] relative">
-             <!-- Top Bar (Rating & Close) -->
-             <div class="flex justify-between items-start mb-8">
-                 <div>
-                      <div class="flex items-center gap-3 mb-1">
-                           <div class="flex text-[#FFD700]">
-                               <span class="material-symbols-outlined fill-current text-xl">star</span>
-                               <span class="material-symbols-outlined fill-current text-xl">star</span>
-                               <span class="material-symbols-outlined fill-current text-xl">star</span>
-                               <span class="material-symbols-outlined fill-current text-xl">star</span>
-                               <span class="material-symbols-outlined fill-current text-xl">star_half</span>
-                           </div>
-                           <span class="text-text-main/60 dark:text-white/60 font-semibold text-sm tracking-wide">(240+ Reviews)</span>
+        <!-- Details (Right) -->
+        <div class="flex-1 p-10 lg:p-14 flex flex-col bg-white dark:bg-zinc-900 relative">
+             <div class="flex justify-between items-center mb-8">
+                 <div class="flex items-center gap-1">
+                      <div class="flex text-primary drop-shadow-md">
+                          <span class="material-symbols-outlined fill-current">star</span>
+                          <span class="material-symbols-outlined fill-current">star</span>
+                          <span class="material-symbols-outlined fill-current">star</span>
+                          <span class="material-symbols-outlined fill-current">star</span>
+                          <span class="material-symbols-outlined fill-current">star_half</span>
                       </div>
-                      <span id="modalRating" class="hidden"></span>
+                      <span class="text-text-muted font-bold text-sm ml-2">4.8</span>
                  </div>
-                 <button onclick="closeProductModal()" class="hidden md:flex p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-text-main/50 dark:text-white/50 hover:text-black dark:hover:text-white">
-                    <span class="material-symbols-outlined text-3xl">close</span>
-                </button>
+                 <span id="modalPrice" class="text-5xl font-black text-text-main dark:text-white tracking-tighter"></span>
              </div>
 
-             <!-- Description -->
-             <div class="mb-8 overflow-y-auto custom-scrollbar flex-1 pr-2">
-                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Description</h3>
-                 <p id="modalDescription" class="text-xl md:text-2xl text-text-main dark:text-white font-serif leading-relaxed"></p>
+             <div class="flex-1 mb-10">
+                 <h3 class="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Description</h3>
+                 <p id="modalDescription" class="text-xl text-text-main dark:text-white/90 font-medium leading-relaxed"></p>
              </div>
 
              <!-- Info Pills -->
-             <div class="flex flex-wrap gap-4 mb-10">
-                 <div class="flex items-center gap-3 px-5 py-3 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
-                     <div class="p-2 bg-white dark:bg-white/10 rounded-full shadow-sm text-primary">
-                        <span class="material-symbols-outlined text-xl">timer</span>
-                     </div>
-                     <div>
-                         <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Time</p>
-                         <p class="font-bold text-text-main dark:text-white">20 Mins</p>
-                     </div>
+             <div class="grid grid-cols-3 gap-3 mb-10 pointer-events-none">
+                 <div class="p-4 bg-gray-50 dark:bg-black/30 rounded-2xl text-center group border border-transparent hover:border-primary/30 transition-colors">
+                     <span class="material-symbols-outlined text-primary mb-1 text-2xl group-hover:scale-110 transition-transform">timer</span>
+                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Prep Time</p>
+                     <p class="font-black text-text-main dark:text-white">15m</p>
                  </div>
-                 <div class="flex items-center gap-3 px-5 py-3 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
-                     <div class="p-2 bg-white dark:bg-white/10 rounded-full shadow-sm text-orange-500">
-                        <span class="material-symbols-outlined text-xl">local_fire_department</span>
-                     </div>
-                     <div>
-                         <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Energy</p>
-                         <p class="font-bold text-text-main dark:text-white">140 Cal</p>
-                     </div>
+                 <div class="p-4 bg-gray-50 dark:bg-black/30 rounded-2xl text-center group border border-transparent hover:border-orange-500/30 transition-colors">
+                     <span class="material-symbols-outlined text-orange-500 mb-1 text-2xl group-hover:scale-110 transition-transform">local_fire_department</span>
+                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Calories</p>
+                     <p class="font-black text-text-main dark:text-white">450</p>
                  </div>
-                 <div class="flex items-center gap-3 px-5 py-3 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
-                     <div class="p-2 bg-white dark:bg-white/10 rounded-full shadow-sm text-green-500">
-                        <span class="material-symbols-outlined text-xl">eco</span>
-                     </div>
-                     <div>
-                         <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Type</p>
-                         <p class="font-bold text-text-main dark:text-white">Fresh</p>
-                     </div>
+                 <div class="p-4 bg-gray-50 dark:bg-black/30 rounded-2xl text-center group border border-transparent hover:border-green-500/30 transition-colors">
+                     <span class="material-symbols-outlined text-green-500 mb-1 text-2xl group-hover:scale-110 transition-transform">eco</span>
+                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Dietary</p>
+                     <p class="font-black text-text-main dark:text-white">Organic</p>
                  </div>
              </div>
 
-             <!-- Bottom Actions -->
-             <div class="flex flex-col md:flex-row items-center gap-6 pt-6 border-t border-gray-100 dark:border-white/10">
-                 <div class="text-4xl md:text-5xl font-black text-text-main dark:text-white tracking-tight" id="modalPrice"></div>
-                 
-                 <div class="flex-1 w-full flex gap-4">
-                     <!-- Add to Cart Removed -->
-                     
-                     <!-- Order Now -->
-                     <button id="modalOrderNow" class="flex-[1.4] h-16 bg-gradient-to-r from-primary to-[#FFD700] text-black font-black rounded-2xl text-lg shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden">
-                         <div class="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300"></div>
-                         <span class="relative z-10">Order Now</span>
-                         <span class="material-symbols-outlined relative z-10 text-2xl">arrow_forward</span>
-                     </button>
-                 </div>
-             </div>
+             <button id="modalOrderNow" class="w-full py-5 bg-primary text-black font-black rounded-full text-xl shadow-[0_10px_30px_rgba(242,185,13,0.4)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+                 <span>Add to Order</span>
+                 <span class="material-symbols-outlined">add_shopping_cart</span>
+             </button>
         </div>
     </div>
 </div>
 
-<script>
-    // 3D Tilt Effect for Modal Visuals
-    const visualContainer = document.getElementById('modalVisuals');
-    const tiltContent = document.getElementById('modalTiltContent');
+<style>
+    /* Custom Scrollbar for horizontal lists */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .animate-slow-zoom { animation: slowZoom 30s infinite alternate ease-in-out; }
+    @@keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.15); } }
+    
+    .animate-float { animation: float 6s infinite ease-in-out; }
+    .animate-float-delayed { animation: float 6s infinite ease-in-out 3s; }
+    @@keyframes float { 
+        0%, 100% { transform: translateY(0) rotate(0); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    .animate-fade-in-up { animation: fadeInUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+    .animate-fade-in-down { animation: fadeInDown 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+    
+    @@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @@keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .animation-delay-300 { animation-delay: 300ms; }
+    .animation-delay-500 { animation-delay: 500ms; }
+</style>
 
-    if (visualContainer && tiltContent) {
-        visualContainer.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return; // Disable on mobile
-            
-            const rect = visualContainer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Calculate percentage from center
-            const xPct = (x / rect.width) - 0.5;
-            const yPct = (y / rect.height) - 0.5;
-            
-            // Max rotation deg
-            const rotateX = yPct * -15; // Invert Y for natural tilt
-            const rotateY = xPct * 15;
-            
-            requestAnimationFrame(() => {
-                tiltContent.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+@section Scripts {
+    <script>
+        // Interactive Live Search with Animation
+        const searchInput = document.getElementById('menuSearch');
+        const menuItems = document.querySelectorAll('.menu-item-card');
+        const countDisplay = document.getElementById('itemCountDisplay');
+        
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                let visibleCount = 0;
+                
+                // 1. Filter Menu Items
+                menuItems.forEach(item => {
+                    const name = item.dataset.name.toLowerCase();
+                    const desc = item.dataset.description.toLowerCase();
+                    
+                    if(name.includes(term) || desc.includes(term)) {
+                        item.style.display = 'flex';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1) translateY(0)';
+                        }, 10);
+                        visibleCount++;
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.9) translateY(20px)';
+                        setTimeout(() => {
+                            if (!name.includes(searchInput.value.toLowerCase()) && !desc.includes(searchInput.value.toLowerCase())) {
+                                item.style.display = 'none';
+                            }
+                        }, 300);
+                    }
+                });
+
+                // 2. Filter Deals Section
+                const dealCards = document.querySelectorAll('.group.relative.bg-white.dark\\:bg-card-dark.rounded-\\[3rem\\]');
+                const dealsSection = document.querySelector('.mb-24.reveal:has(.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3)');
+                
+                let visibleDeals = 0;
+                dealCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const desc = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if(title.includes(term) || desc.includes(term)) {
+                        card.style.display = 'block';
+                        visibleDeals++;
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if(dealsSection) {
+                    dealsSection.style.display = visibleDeals > 0 ? 'block' : 'none';
+                }
+                
+                if(countDisplay) countDisplay.textContent = `${visibleCount} Items`;
             });
-        });
+        }
 
-        visualContainer.addEventListener('mouseleave', () => {
-             requestAnimationFrame(() => {
-                tiltContent.style.transform = `rotateX(0) rotateY(0)`;
-             });
-        });
-    }
+        // Hero Parallax Mouse Tracking Effect
+        const heroContainer = document.querySelector('.hero-container');
+        const heroBg = document.querySelector('.hero-bg');
+        const heroContent = document.querySelector('.hero-content');
 
-    // Initialize AOS
-    AOS.init({
-        duration: 800,
-        once: true,
-        easing: 'ease-out-cubic'
-    });
+        if(heroContainer && window.innerWidth > 1024) {
+            heroContainer.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) / 50;
+                const y = (window.innerHeight / 2 - e.pageY) / 50;
+                
+                heroBg.style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+                heroContent.style.transform = `translate(${-x*2}px, ${-y*2}px)`;
+            });
+            heroContainer.addEventListener('mouseleave', () => {
+                heroBg.style.transform = `scale(1.1) translate(0, 0)`;
+                heroContent.style.transform = `translate(0, 0)`;
+            });
+        }
 
-    function quickAdd(element, event) {
-        event.stopPropagation();
-        event.preventDefault();
-        
-        // Prevent multiple clicks while animation is running
-        if (element.classList.contains('bg-green-500')) return;
-        
-        const card = element.closest('.group');
-        const data = card.dataset;
-        
-        const itemData = {
-            id: parseInt(data.id),
-            name: data.name,
-            price: parseFloat(data.price),
-            imageUrl: data.image
+        // 3D Tilt Effect for Premium Feel
+        const applyTilt = () => {
+            if (window.innerWidth <= 1024) return;
+            
+            document.querySelectorAll('.menu-item-card, .trending-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -5; 
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    
+                    card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    card.style.zIndex = '50';
+                    card.style.transition = 'transform 0.1s ease-out';
+                    
+                    const glare = card.querySelector('.glare-effect');
+                    if(glare) {
+                        glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, transparent 50%)`;
+                    }
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                    card.style.zIndex = '10';
+                    card.style.transition = 'transform 0.5s cubic-bezier(0.2, 1, 0.3, 1)';
+                    
+                    const glare = card.querySelector('.glare-effect');
+                    if(glare) {
+                        glare.style.background = 'transparent';
+                    }
+                });
+            });
         };
-        
-        if (typeof cart !== 'undefined') {
-            cart.addItem(itemData);
-            
-            // Visual feedback
-            const btn = element;
-            const originalContent = btn.innerHTML;
-            const originalClasses = btn.className; // Save exact original classes
-            
-            btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span>';
-            btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalContent;
-                btn.className = originalClasses; // Restore exact original classes
-            }, 1000);
-        }
-    }
 
-    function openProductModal(element, event) {
-        if (event && event.target.closest('.add-to-cart')) {
-             return;
-        }
-        
-        const modal = document.getElementById('productModal');
-        const content = document.getElementById('modalContent');
-        const data = element.dataset;
+        // Initialize tilt and add glare containers
+        document.querySelectorAll('.menu-item-card, .trending-card').forEach(card => {
+             const glare = document.createElement('div');
+             glare.className = 'glare-effect absolute inset-0 pointer-events-none rounded-[inherit] z-20 transition-background duration-200';
+             card.appendChild(glare);
+        });
+        applyTilt();
 
-        document.getElementById('modalImage').src = data.image;
-        document.getElementById('modalTitle').textContent = data.name;
-        document.getElementById('modalRating').textContent = data.rating;
-        document.getElementById('modalDescription').textContent = data.description;
-        document.getElementById('modalPrice').textContent = '$' + parseFloat(data.price).toFixed(2);
+        // Reveal Observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // Add to Cart logic removed
-
-        // Order Now Button Logic
-        const orderBtn = document.getElementById('modalOrderNow');
-        const newOrderBtn = orderBtn.cloneNode(true);
-        orderBtn.parentNode.replaceChild(newOrderBtn, orderBtn);
-
-        newOrderBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        function quickAdd(element, event) {
+            event.stopPropagation();
+            const card = element.closest('[data-id]');
+            const data = card.dataset;
             
             const itemData = {
                 id: parseInt(data.id),
@@ -446,81 +505,103 @@
                 imageUrl: data.image
             };
             
-            console.log('Adding item to cart:', itemData); // Debug log
+            if (typeof cart !== 'undefined') {
+                cart.addItem(itemData);
+                
+                // Animated Feedback
+                const btn = element.tagName === 'BUTTON' ? element : element.querySelector('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined text-white">done</span>';
+                btn.classList.add('!bg-green-500', '!border-green-500');
+                
+                // Add a small ripple effect wrapper
+                const ripple = document.createElement('div');
+                ripple.className = 'absolute inset-0 bg-white/40 rounded-full animate-ping pointer-events-none';
+                btn.appendChild(ripple);
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('!bg-green-500', '!border-green-500');
+                }, 1500);
+            }
+        }
+
+        function openProductModal(element, event) {
+            if (event.target.closest('button')) return;
+
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('modalContent');
+            const data = element.dataset;
+
+            document.getElementById('modalImage').src = data.image;
+            document.getElementById('modalTitle').textContent = data.name;
+            document.getElementById('modalDescription').textContent = data.description;
+            document.getElementById('modalPrice').textContent = '$' + parseFloat(data.price).toFixed(0);
+
+            const orderBtn = document.getElementById('modalOrderNow');
+            const newBtn = orderBtn.cloneNode(true);
+            orderBtn.parentNode.replaceChild(newBtn, orderBtn);
+            newBtn.addEventListener('click', () => {
+                quickAdd(element, { stopPropagation: () => {} });
+                closeProductModal();
+                setTimeout(() => window.location.href = '/Order/Cart', 400);
+            });
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Staggered entrance animation
+            requestAnimationFrame(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('modalContent');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 400);
+        }
+
+        function quickAddDeal(id, name, price, imageUrl, element, event) {
+            event.stopPropagation();
+            
+            const itemData = {
+                id: id,
+                name: name,
+                price: parseFloat(price),
+                imageUrl: imageUrl,
+                customization: 'Bundle Deal'
+            };
             
             if (typeof cart !== 'undefined') {
-                cart.addItem(itemData, true); // Add silently to cart
-                console.log('Cart after adding:', cart.items); // Debug log
+                cart.addItem(itemData);
+                
+                // Animated Feedback
+                const originalHTML = element.innerHTML;
+                element.innerHTML = '<span class="material-symbols-outlined">verified</span> Claimed!';
+                element.classList.add('!bg-green-500', '!text-white');
+                
+                setTimeout(() => {
+                    element.innerHTML = originalHTML;
+                    element.classList.remove('!bg-green-500', '!text-white');
+                }, 2000);
             }
-
-            closeProductModal();
-            
-            // Small delay to ensure localStorage is saved before redirect
-            setTimeout(() => {
-                window.location.href = '/Order/Cart';
-            }, 100);
-        });
-
-        modal.classList.remove('hidden');
-        requestAnimationFrame(() => {
-            content.classList.remove('scale-95', 'opacity-0');
-        });
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeProductModal() {
-        const modal = document.getElementById('productModal');
-        const content = document.getElementById('modalContent');
-        
-        content.classList.add('scale-95', 'opacity-0');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }, 300);
-    }
-    
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !document.getElementById('productModal').classList.contains('hidden')) {
-            closeProductModal();
         }
-    });
 
-</script>
-
-<style>
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: rgba(0,0,0,0.1);
-        border-radius: 20px;
-    }
-    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: rgba(255,255,255,0.1);
-    }
-    
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-    
-    .animate-fade-in-up { animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .animate-fade-in-down { animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    
-    @@keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(40px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @@keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-40px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animation-delay-300 { animation-delay: 300ms; }
-</style>
+        function scrollDeals(direction) {
+            const container = document.getElementById('dealsScrollContainer');
+            const scrollAmount = 400; // Adjust based on card width
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+    </script>
+}

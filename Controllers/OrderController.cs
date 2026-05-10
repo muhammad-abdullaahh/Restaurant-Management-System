@@ -33,14 +33,48 @@ namespace FoodHeaven.Controllers
         {
             try
             {
-                // Validate that all menu items exist
+                // Check if restaurant is open
+                var now = DateTime.Now;
+                var day = now.DayOfWeek;
+                var hour = now.Hour;
+                bool isOpen = false;
+
+                if (hour >= 9) {
+                    isOpen = true; // Opens at 9 AM every day
+                } else {
+                    // Check if we are in the late night shift of the previous day
+                    var prevDay = day == DayOfWeek.Sunday ? DayOfWeek.Saturday : day - 1;
+                    if (prevDay == DayOfWeek.Saturday || prevDay == DayOfWeek.Sunday) {
+                        if (hour < 4) isOpen = true; // Weekend stays open until 4 AM
+                    } else {
+                        if (hour < 3) isOpen = true; // Weekday stays open until 3 AM
+                    }
+                }
+                
+                if (!isOpen)
+                {
+                    string hoursMsg = (day == DayOfWeek.Saturday || day == DayOfWeek.Sunday) 
+                        ? "9:00 AM to 4:00 AM" 
+                        : "9:00 AM to 3:00 AM";
+                    return Json(new { success = false, message = $"Sorry, the restaurant is currently closed. Today's hours are {hoursMsg}." });
+                }
+
+                // Validate that all menu items exist (Check both MenuItems and Deals)
                 var menuItemIds = order.OrderItems.Select(oi => oi.MenuItemId).Distinct().ToList();
+                
                 var existingMenuItems = await _context.MenuItems
                     .Where(m => menuItemIds.Contains(m.Id))
                     .Select(m => m.Id)
                     .ToListAsync();
 
-                var invalidIds = menuItemIds.Except(existingMenuItems).ToList();
+                var existingDeals = await _context.Deals
+                    .Where(d => menuItemIds.Contains(d.Id))
+                    .Select(d => d.Id)
+                    .ToListAsync();
+
+                var allValidIds = existingMenuItems.Concat(existingDeals).Distinct().ToList();
+
+                var invalidIds = menuItemIds.Except(allValidIds).ToList();
                 if (invalidIds.Any())
                 {
                     return Json(new { 
@@ -77,6 +111,58 @@ namespace FoodHeaven.Controllers
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
+                // Loyalty Points Integration
+                if (order.UserId.HasValue)
+                {
+                    try
+                    {
+                        var customerId = $"USER-{order.UserId}";
+                        var loyaltyAccount = await _context.LoyaltyAccounts.FirstOrDefaultAsync(l => l.CustomerId == customerId);
+                        
+                        if (loyaltyAccount == null)
+                        {
+                            loyaltyAccount = new LoyaltyAccount
+                            {
+                                CustomerId = customerId,
+                                CustomerName = order.CustomerName ?? "Valued Customer",
+                                Email = order.CustomerEmail,
+                                Points = 0,
+                                MembershipTier = "Bronze",
+                                CreatedAt = DateTime.Now
+                            };
+                            _context.LoyaltyAccounts.Add(loyaltyAccount);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        // Calculate points: 10 points per $1
+                        int earnedPoints = (int)(order.Total * 10);
+                        loyaltyAccount.Points += earnedPoints;
+                        loyaltyAccount.LastActivityDate = DateTime.Now;
+
+                        // Update tier
+                        if (loyaltyAccount.Points >= 2000) loyaltyAccount.MembershipTier = "Platinum";
+                        else if (loyaltyAccount.Points >= 1000) loyaltyAccount.MembershipTier = "Gold";
+                        else if (loyaltyAccount.Points >= 500) loyaltyAccount.MembershipTier = "Silver";
+
+                        var transaction = new LoyaltyTransaction
+                        {
+                            LoyaltyAccountId = loyaltyAccount.Id,
+                            TransactionType = "Earn",
+                            Points = earnedPoints,
+                            Description = $"Points earned from Order #{order.OrderNumber}",
+                            OrderId = order.Id,
+                            TransactionDate = DateTime.Now
+                        };
+                        _context.LoyaltyTransactions.Add(transaction);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log loyalty error but don't fail the order
+                        Console.WriteLine($"Loyalty Error: {ex.Message}");
+                    }
+                }
+
                 return Json(new { success = true, orderNumber = order.OrderNumber, orderId = order.Id });
             }
             catch (Exception ex)
@@ -96,24 +182,72 @@ namespace FoodHeaven.Controllers
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
              if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
              {
-                 // Debug: Show what claims we have
-                 ViewBag.DebugMessage = "No User ID found. Claims: " + string.Join(", ", User.Claims.Select(c => $"{c.Type}={c.Value}"));
-                 return View(new List<Order>());
+                 return RedirectToAction("Login", "Account");
              }
 
              var orders = await _context.Orders
                  .Include(o => o.OrderItems)
                  .ThenInclude(oi => oi.MenuItem)
-                 .Where(o => o.UserId == userId)
+                 .Where(o => o.UserId == userId && o.Status != "Delivered" && o.Status != "Completed")
                  .OrderByDescending(o => o.OrderDate)
                  .ToListAsync();
 
-             // Debug info
-             ViewBag.UserId = userId;
-             ViewBag.Username = User.Identity.Name;
-             ViewBag.OrderCount = orders.Count;
+             var reservations = await _context.Reservations
+                 .Where(r => r.UserId == userId)
+                 .OrderByDescending(r => r.ReservationDate)
+                 .ToListAsync();
 
-             return View(orders);
+             var viewModel = new UserActivityViewModel
+             {
+                 Orders = orders,
+                 Reservations = reservations,
+                 UserId = userId,
+                 Username = User.Identity?.Name ?? "User"
+             };
+
+             return View(viewModel);
+        }
+
+        // POST: Order/Cancel
+        [HttpPost]
+        public async Task<JsonResult> Cancel(int id)
+        {
+            try
+            {
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.Id == id);
+
+                if (order == null)
+                {
+                    return Json(new { success = false, message = "Order not found" });
+                }
+
+                // Only allow cancelling if Pending
+                if (order.Status != "Pending")
+                {
+                    return Json(new { success = false, message = $"Cannot cancel order with status: {order.Status}" });
+                }
+
+                // Remove associated Loyalty Transactions if any
+                var transactions = await _context.LoyaltyTransactions.Where(t => t.OrderId == id).ToListAsync();
+                if (transactions.Any())
+                {
+                    _context.LoyaltyTransactions.RemoveRange(transactions);
+                }
+
+                // Remove OrderItems and then the Order itself
+                _context.OrderItems.RemoveRange(order.OrderItems);
+                _context.Orders.Remove(order);
+                
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Order removed successfully from database" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         // GET: Order/Confirmation/{id}

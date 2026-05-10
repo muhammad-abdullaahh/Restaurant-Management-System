@@ -147,6 +147,8 @@ class ShoppingCart {
 
 // Initialize cart
 const cart = new ShoppingCart();
+let appliedDiscount = 0;
+let appliedPromoCode = "";
 
 // Add to cart button handlers
 document.addEventListener('DOMContentLoaded', function () {
@@ -277,13 +279,24 @@ function updateCartTotals() {
     const subtotal = cart.getSubtotal();
     const deliveryFee = subtotal > 0 ? 5.00 : 0; // Updated to match view default
     const tax = subtotal * 0.10;
-    const total = subtotal + deliveryFee + tax;
+    const total = subtotal + deliveryFee + tax - appliedDiscount;
 
     updateElementText('subtotal', `$${subtotal.toFixed(2)}`);
     updateElementText('deliveryFee', `$${deliveryFee.toFixed(2)}`);
     updateElementText('tax', `$${tax.toFixed(2)}`);
+    updateElementText('discount', `-$${appliedDiscount.toFixed(2)}`);
     updateElementText('total', `$${total.toFixed(2)}`);
     updateElementText('totalButton', `$${total.toFixed(2)}`);
+
+    // Show/hide discount row
+    const discountRow = document.getElementById('discountRow');
+    if (discountRow) {
+        if (appliedDiscount > 0) {
+            discountRow.classList.remove('hidden');
+        } else {
+            discountRow.classList.add('hidden');
+        }
+    }
 }
 
 function updateElementText(id, text) {
@@ -327,7 +340,7 @@ async function placeOrder() {
     const subtotal = getSubtotal(itemsToOrder);
     const deliveryFee = subtotal > 0 ? 5.00 : 0;
     const tax = subtotal * 0.10;
-    const total = subtotal + deliveryFee + tax;
+    const total = subtotal + deliveryFee + tax - appliedDiscount;
 
     const orderData = {
         orderItems: itemsToOrder.map(item => ({
@@ -345,6 +358,8 @@ async function placeOrder() {
         subtotal: subtotal,
         deliveryFee: deliveryFee,
         tax: tax,
+        promoCode: appliedPromoCode,
+        discount: appliedDiscount,
         total: total
     };
 
@@ -379,7 +394,8 @@ async function placeOrder() {
 
 // Apply Promo Code
 async function applyPromoCode() {
-    const promoCode = document.getElementById('promoCodeInput').value.trim();
+    const promoCodeInput = document.getElementById('promoCodeInput');
+    const promoCode = promoCodeInput.value.trim();
     if (!promoCode) return;
 
     const subtotal = cart.getSubtotal();
@@ -389,9 +405,22 @@ async function applyPromoCode() {
         const result = await response.json();
 
         if (result.success) {
+            appliedDiscount = result.discount;
+            appliedPromoCode = promoCode.toUpperCase();
+            
+            // Update Totals
+            updateCartTotals();
+            
+            // If we are on checkout page, call its specific total function too
+            if (typeof calculateCheckoutTotals === 'function') {
+                calculateCheckoutTotals(cart.getCheckoutItems());
+            }
+
             alert(result.message + ` You saved $${result.discount.toFixed(2)}!`);
-            // Update UI to show discount
         } else {
+            appliedDiscount = 0;
+            appliedPromoCode = "";
+            updateCartTotals();
             alert(result.message);
         }
     } catch (error) {

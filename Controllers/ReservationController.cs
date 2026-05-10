@@ -40,6 +40,21 @@ namespace FoodHeaven.Controllers
                 reservation.CreatedAt = DateTime.Now;
                 reservation.Status = "Confirmed";
 
+                // Link User if authenticated
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                    {
+                        reservation.UserId = userId;
+                        // Use user's email if provided
+                        if (string.IsNullOrEmpty(reservation.Email))
+                        {
+                            reservation.Email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+                        }
+                    }
+                }
+
                 // Ensure ReservationType is set if null
                 if (string.IsNullOrEmpty(reservation.ReservationType))
                 {
@@ -174,11 +189,11 @@ namespace FoodHeaven.Controllers
                     return Json(new { success = false, message = "Reservation not found" });
                 }
 
-                reservation.Status = "Cancelled";
-                reservation.UpdatedAt = DateTime.Now;
-
+                // Instead of setting status to "Cancelled", we delete the record
+                _context.Reservations.Remove(reservation);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "Reservation cancelled successfully" });
+
+                return Json(new { success = true, message = "Reservation removed successfully from database" });
             }
             catch (Exception ex)
             {

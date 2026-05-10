@@ -3,426 +3,242 @@
     ViewData["Title"] = "Contact Us - FoodHeaven";
 }
 
-<!-- AOS & Styles -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<!-- Lottie Player -->
-<script src="https://unpkg.com/@@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-
-<!-- Parallax Hero -->
-<div class="relative h-[60vh] min-h-[500px] w-full overflow-hidden flex items-center justify-center bg-zinc-900 group">
+<!-- Hero Section with Parallax -->
+<div class="relative h-[55vh] min-h-[500px] w-full overflow-hidden flex items-center justify-center bg-zinc-950">
     <div class="absolute inset-0 z-0">
-        <img id="contact-hero-bg" src="~/images/contact_hero.png" class="w-full h-full object-cover opacity-70 scale-105 transition-transform duration-1000 ease-out" />
-        <div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-black/40 to-black/60"></div>
+        <img id="contact-hero-bg" src="~/images/contact_hero.png" class="w-full h-full object-cover opacity-50 transition-transform duration-[10s] animate-slow-zoom" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-background-light dark:to-background-dark"></div>
     </div>
     
-    <div class="relative z-10 text-center px-4 mt-16 max-w-4xl">
-        <span class="text-primary font-bold tracking-[0.3em] uppercase mb-4 block animate-fade-in-down drop-shadow-lg" data-aos="fade-down" data-aos-delay="100">We're Here For You</span>
-        <h1 class="text-6xl md:text-7xl font-display font-black text-white mb-6 animate-fade-in-up drop-shadow-xl" data-aos="fade-up" data-aos-delay="200">
-            Get in <span class="italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-200">Touch</span>
+    <div class="relative z-10 text-center px-4 max-w-5xl space-y-6">
+        <div class="opacity-0 animate-fade-in-down">
+            <span class="px-6 py-2 rounded-full border border-primary/40 text-primary bg-primary/5 backdrop-blur-xl text-xs font-black uppercase tracking-[0.4em]">Get In Touch</span>
+        </div>
+        <h1 class="text-6xl md:text-[100px] font-display font-black text-white leading-none opacity-0 animate-fade-in-up animation-delay-300">
+            Let's Start a <br /><span class="italic text-primary">Conversation</span>
         </h1>
-        <p class="text-white/90 text-xl font-light leading-relaxed animate-fade-in-up max-w-2xl mx-auto drop-shadow-md" data-aos="fade-up" data-aos-delay="300">
-             Have a question or want to host an event? Send us a message and we'll respond as soon as possible.
+        <p class="text-xl md:text-2xl text-white/70 font-light max-w-3xl mx-auto opacity-0 animate-fade-in-up animation-delay-500 leading-relaxed">
+            Have a question, feedback, or a special request? Our team is ready to assist you.
         </p>
     </div>
 </div>
 
 <!-- Main Content -->
-<main class="container mx-auto px-4 py-16 -mt-20 relative z-20 mb-16">
-    <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+<main class="container mx-auto px-4 py-20 -mt-24 relative z-20 mb-16">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
         
-        <!-- Left: Contact Info & Map -->
-        <div class="lg:w-5/12 space-y-8 order-2 lg:order-1" data-aos="fade-right" data-aos-delay="400">
+        <!-- Left: Contact Details & Stats -->
+        <div class="lg:w-5/12 space-y-10 reveal">
             
-            <!-- Interactive Floating Cards Stack -->
-            <div class="space-y-6 relative pers-3d">
-                 <!-- Phone Card -->
-                 <div class="tilt-card bg-white/80 dark:bg-card-dark/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white/40 dark:border-white/10 relative overflow-hidden group cursor-pointer" onclick="copyToClipboard('+15551234567', 'Phone copied!')">
-                    <div class="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                    <div class="flex items-center gap-5 relative z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-yellow-400 flex items-center justify-center text-black shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
-                            <span class="material-symbols-outlined text-3xl">call</span>
+            <div class="space-y-6">
+                <!-- Phone -->
+                <div class="group bg-white/80 dark:bg-card-dark/80 backdrop-blur-3xl p-8 rounded-[2.5rem] shadow-xl border border-white/20 dark:border-white/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer" onclick="copyToClipboard('+15551234567', 'Phone copied!')">
+                    <div class="flex items-center gap-6">
+                        <div class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1.01c-.36-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.72 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-bold tracking-widest text-text-muted uppercase mb-1">Call Us Now</p>
-                            <h3 class="text-xl font-black text-text-main dark:text-white group-hover:text-primary transition-colors">+1 (555) 123-4567</h3>
+                            <p class="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase mb-1">Direct Line</p>
+                            <h3 class="text-2xl font-black text-text-main dark:text-white">+1 (555) 123-4567</h3>
                         </div>
-                        <span class="material-symbols-outlined ml-auto text-gray-300 group-hover:text-primary transition-colors">content_copy</span>
                     </div>
-                 </div>
+                </div>
 
-                 <!-- Email Card -->
-                 <div class="tilt-card bg-white/80 dark:bg-card-dark/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white/40 dark:border-white/10 relative overflow-hidden group cursor-pointer" onclick="copyToClipboard('info@foodheaven.com', 'Email copied!')">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/5 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                    <div class="flex items-center gap-5 relative z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-300 flex items-center justify-center text-white shadow-lg shadow-blue-400/30 group-hover:scale-110 transition-transform duration-300">
-                            <span class="material-symbols-outlined text-3xl">mail</span>
+                <!-- Email -->
+                <div class="group bg-white/80 dark:bg-card-dark/80 backdrop-blur-3xl p-8 rounded-[2.5rem] shadow-xl border border-white/20 dark:border-white/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer" onclick="copyToClipboard('info@foodheaven.com', 'Email copied!')">
+                    <div class="flex items-center gap-6">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-500 shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-bold tracking-widest text-text-muted uppercase mb-1">Send an Email</p>
-                            <h3 class="text-xl font-black text-text-main dark:text-white group-hover:text-blue-500 transition-colors">info@foodheaven.com</h3>
+                            <p class="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase mb-1">Official Support</p>
+                            <h3 class="text-2xl font-black text-text-main dark:text-white">info@foodheaven.com</h3>
                         </div>
-                        <span class="material-symbols-outlined ml-auto text-gray-300 group-hover:text-blue-500 transition-colors">content_copy</span>
                     </div>
-                 </div>
+                </div>
 
-                 <!-- Location Card -->
-                 <div class="tilt-card bg-white/80 dark:bg-card-dark/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white/40 dark:border-white/10 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/5 to-emerald-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                    <div class="flex items-center gap-5 relative z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-300 flex items-center justify-center text-white shadow-lg shadow-emerald-400/30 group-hover:scale-110 transition-transform duration-300">
-                            <span class="material-symbols-outlined text-3xl">location_on</span>
+                <!-- Address -->
+                <div class="group bg-white/80 dark:bg-card-dark/80 backdrop-blur-3xl p-8 rounded-[2.5rem] shadow-xl border border-white/20 dark:border-white/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                    <div class="flex items-center gap-6">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-500 shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-bold tracking-widest text-text-muted uppercase mb-1">Visit HQ</p>
-                            <h3 class="text-lg font-black text-text-main dark:text-white leading-tight">123 Gourmet Street,<br>Food City</h3>
+                            <p class="text-[10px] font-black tracking-[0.2em] text-gray-400 uppercase mb-1">Our Location</p>
+                            <h3 class="text-2xl font-black text-text-main dark:text-white leading-tight">123 Gourmet Street,<br />Food City, NY 10001</h3>
                         </div>
-                        <a href="#" class="ml-auto w-10 h-10 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all">
-                             <span class="material-symbols-outlined text-sm">near_me</span>
-                        </a>
                     </div>
-                 </div>
+                </div>
             </div>
 
-            <!-- Enhanced Map Module -->
-            <div class="tilt-card bg-zinc-900 rounded-[2rem] overflow-hidden shadow-2xl relative h-[280px] group border border-white/10">
-                 <!-- Simulated Live Map -->
-                 <div class="absolute inset-0 bg-[url('https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/-74.006,40.7128,13,0/600x400?access_token=YOUR_TOKEN')] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100 group-hover:scale-110"></div>
-                 
-                 <!-- Radar Effect -->
-                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
-                      <div class="relative flex h-24 w-24 items-center justify-center">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-20 duration-1000"></span>
-                          <span class="animate-ping absolute inline-flex h-[70%] w-[70%] rounded-full bg-primary opacity-40 duration-1000 delay-100"></span>
-                          <span class="relative inline-flex rounded-full h-12 w-12 bg-primary border-4 border-white items-center justify-center shadow-xl z-10 transform transition-transform group-hover:scale-110">
-                              <span class="material-symbols-outlined text-black font-black">restaurant</span>
-                          </span>
-                      </div>
-                 </div>
-                 
-                 <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-12">
-                     <div class="flex justify-between items-end">
-                         <div>
-                             <h4 class="text-white font-bold text-xl mb-1">FoodHeaven Central</h4>
-                             <p class="text-gray-400 text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Open Now until 10 PM</p>
-                         </div>
-                         <button class="bg-white text-black px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary transition-colors flex items-center gap-1">
-                             Get Directions <span class="material-symbols-outlined text-sm">arrow_outward</span>
-                         </button>
-                     </div>
-                 </div>
-            </div>
-            
-            <!-- Floating Social Dock -->
-            <div class="flex justify-center lg:justify-start gap-4 pt-2">
-                <a href="#" class="w-16 h-16 rounded-2xl bg-white dark:bg-card-dark shadow-xl border border-gray-100 dark:border-white/5 flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white hover:-translate-y-2 hover:rotate-3 transition-all duration-300 group relative overflow-hidden">
-                    <span class="absolute inset-0 bg-gradient-to-tr from-black/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    <i class="fa-brands fa-facebook-f text-2xl font-bold">f</i>
-                </a>
-                <a href="#" class="w-16 h-16 rounded-2xl bg-white dark:bg-card-dark shadow-xl border border-gray-100 dark:border-white/5 flex items-center justify-center text-[#E4405F] hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white hover:-translate-y-2 hover:-rotate-3 transition-all duration-300 group">
-                    <span class="text-2xl font-bold">ig</span>
-                </a>
-                <a href="#" class="w-16 h-16 rounded-2xl bg-white dark:bg-card-dark shadow-xl border border-gray-100 dark:border-white/5 flex items-center justify-center text-[#1DA1F2] hover:bg-[#1DA1F2] hover:text-white hover:-translate-y-2 hover:rotate-3 transition-all duration-300 group">
-                   <span class="text-2xl font-bold">tw</span>
-                </a>
+            <!-- Operating Hours Card -->
+            <div class="bg-zinc-950 rounded-[3rem] p-10 border border-white/5 relative overflow-hidden group shadow-2xl">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50"></div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-black text-white mb-8 flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">schedule</span>
+                        Operating Hours
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center group/line">
+                            <span class="text-white/60 font-medium group-hover/line:text-primary transition-colors">Monday - Friday</span>
+                            <span class="text-white font-black">09:00 AM - 03:00 AM</span>
+                        </div>
+                        <div class="flex justify-between items-center group/line">
+                            <span class="text-white/60 font-medium group-hover/line:text-primary transition-colors">Saturday - Sunday</span>
+                            <span class="text-white font-black text-primary">09:00 AM - 04:00 AM</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
-        <!-- Right: Animated Form -->
-        <div class="lg:w-7/12 order-1 lg:order-2" data-aos="fade-left" data-aos-delay="500">
-             <div class="bg-white/95 dark:bg-card-dark/95 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-white/20 dark:border-white/5 relative overflow-hidden">
-                <!-- Decorative Elements -->
-                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-                <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+        <!-- Right: Modern Contact Form -->
+        <div class="lg:w-7/12 reveal">
+             <div class="bg-white dark:bg-card-dark rounded-[3rem] p-10 md:p-16 shadow-2xl border border-gray-100 dark:border-white/5 relative overflow-hidden">
+                
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="mb-10 p-6 rounded-3xl bg-green-500/10 border border-green-500/20 flex items-center gap-5 animate-bounce-slow">
+                        <div class="size-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-green-500/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-green-700 dark:text-green-400">Message Delivered</h4>
+                            <p class="text-sm text-green-600/80 dark:text-green-300/80">@TempData["SuccessMessage"]</p>
+                        </div>
+                    </div>
+                }
 
-                <div class="relative z-10">
-                    <div class="flex items-center gap-4 mb-8">
-                         <div class="bg-primary/20 p-3 rounded-2xl text-primary">
-                             <span class="material-symbols-outlined text-3xl">chat_bubble</span>
-                         </div>
-                         <div>
-                             <h2 class="text-3xl font-black text-text-main dark:text-white">Send a Message</h2>
-                             <p class="text-text-muted">We usually reply within 24 hours.</p>
-                         </div>
+                <div class="mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black text-text-main dark:text-white tracking-tighter mb-4">Send a <span class="text-primary">Note.</span></h2>
+                    <p class="text-text-muted text-lg font-light">Whether it's a reservation query or just to say hi, we'd love to hear from you.</p>
+                </div>
+
+                <form asp-action="Submit" method="post" class="space-y-8">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-primary uppercase tracking-[0.2em] ml-1">Full Name</label>
+                            <input asp-for="FullName" required 
+                                   class="w-full px-6 py-4 bg-gray-50 dark:bg-white/5 border-2 border-transparent rounded-2xl focus:border-primary/30 focus:bg-white dark:focus:bg-white/10 outline-none transition-all font-bold text-text-main dark:text-white placeholder-gray-400" 
+                                   placeholder="Your Name" />
+                            <span asp-validation-for="FullName" class="text-red-500 text-[10px] font-black uppercase tracking-widest ml-1"></span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-primary uppercase tracking-[0.2em] ml-1">Email Address</label>
+                            <input asp-for="Email" type="email" required 
+                                   class="w-full px-6 py-4 bg-gray-50 dark:bg-white/5 border-2 border-transparent rounded-2xl focus:border-primary/30 focus:bg-white dark:focus:bg-white/10 outline-none transition-all font-bold text-text-main dark:text-white placeholder-gray-400" 
+                                   placeholder="email@example.com" />
+                            <span asp-validation-for="Email" class="text-red-500 text-[10px] font-black uppercase tracking-widest ml-1"></span>
+                        </div>
                     </div>
 
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-400 px-6 py-4 rounded-xl flex items-center gap-4 mb-8 animate-fade-in-up">
-                            <dotlottie-player src="https://lottie.host/9e414848-6a3f-4e08-966e-c6c7b944208e/2X0m4k3b3M.json" background="transparent" speed="1" style="width: 50px; height: 50px;" loop autoplay></dotlottie-player>
-                            <div>
-                                <p class="font-bold">Message Sent!</p>
-                                <p class="text-sm opacity-80">@TempData["SuccessMessage"]</p>
-                            </div>
-                        </div>
-                    }
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-primary uppercase tracking-[0.2em] ml-1">Phone Number</label>
+                        <input asp-for="PhoneNumber" type="tel" 
+                               class="w-full px-6 py-4 bg-gray-50 dark:bg-white/5 border-2 border-transparent rounded-2xl focus:border-primary/30 focus:bg-white dark:focus:bg-white/10 outline-none transition-all font-bold text-text-main dark:text-white placeholder-gray-400" 
+                               placeholder="+1 (555) 000-0000" />
+                        <span asp-validation-for="PhoneNumber" class="text-red-500 text-[10px] font-black uppercase tracking-widest ml-1"></span>
+                    </div>
 
-                    <form asp-action="Submit" method="post" class="space-y-6">
-                        @Html.AntiForgeryToken()
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="group relative">
-                                <label asp-for="FullName" class="block text-text-main dark:text-white text-sm font-bold mb-2 ml-1">Full Name</label>
-                                <div class="relative transform transition-all duration-300 group-hover:-translate-y-1">
-                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">person</span>
-                                    <input asp-for="FullName" 
-                                           class="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-50 dark:bg-black/20 border-2 border-transparent focus:bg-white dark:focus:bg-black/40 focus:border-primary/50 text-text-main dark:text-white placeholder-text-main/30 dark:placeholder-white/30 focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all duration-300 font-medium shadow-inner group-hover:shadow-lg" 
-                                           placeholder="John Doe" />
-                                </div>
-                                <span asp-validation-for="FullName" class="text-red-500 text-xs mt-1 ml-1 font-bold"></span>
-                            </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-primary uppercase tracking-[0.2em] ml-1">Your Message</label>
+                        <textarea asp-for="Message" rows="5" required 
+                                  class="w-full px-6 py-4 bg-gray-50 dark:bg-white/5 border-2 border-transparent rounded-2xl focus:border-primary/30 focus:bg-white dark:focus:bg-white/10 outline-none transition-all font-bold text-text-main dark:text-white placeholder-gray-400 resize-none" 
+                                  placeholder="Write your message here..."></textarea>
+                        <span asp-validation-for="Message" class="text-red-500 text-[10px] font-black uppercase tracking-widest ml-1"></span>
+                    </div>
 
-                            <div class="group relative">
-                                <label asp-for="Email" class="block text-text-main dark:text-white text-sm font-bold mb-2 ml-1">Email</label>
-                                <div class="relative transform transition-all duration-300 group-hover:-translate-y-1">
-                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">mail</span>
-                                    <input asp-for="Email" type="email"
-                                           class="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 text-text-main dark:text-white placeholder-text-main/30 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-medium shadow-sm group-hover:shadow-md" 
-                                           placeholder="john@example.com" />
-                                </div>
-                                <span asp-validation-for="Email" class="text-red-500 text-xs mt-1 ml-1 font-bold"></span>
-                            </div>
-                        </div>
-
-                        <div class="group relative">
-                            <label asp-for="PhoneNumber" class="block text-text-main dark:text-white text-sm font-bold mb-2 ml-1">Phone Number</label>
-                            <div class="relative transform transition-all duration-300 group-hover:-translate-y-1">
-                                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">call</span>
-                                <input asp-for="PhoneNumber" type="tel"
-                                       class="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 text-text-main dark:text-white placeholder-text-main/30 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-medium shadow-sm group-hover:shadow-md" 
-                                       placeholder="+1 (555) 123-4567" />
-                            </div>
-                            <span asp-validation-for="PhoneNumber" class="text-red-500 text-xs mt-1 ml-1 font-bold"></span>
-                        </div>
-
-                        <div class="group relative">
-                            <label asp-for="Message" class="block text-text-main dark:text-white text-sm font-bold mb-2 ml-1">Your Message</label>
-                            <div class="relative transform transition-all duration-300 group-hover:-translate-y-1">
-                                <textarea asp-for="Message" rows="5"
-                                          class="w-full px-4 py-4 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 text-text-main dark:text-white placeholder-text-main/30 dark:placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-medium resize-none shadow-sm group-hover:shadow-md leading-relaxed" 
-                                          placeholder="How can we help you today?"></textarea>
-                            </div>
-                            <span asp-validation-for="Message" class="text-red-500 text-xs mt-1 ml-1 font-bold"></span>
-                        </div>
-
-                        <button type="submit" class="w-full group bg-black dark:bg-white text-white dark:text-black font-black text-lg py-5 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl hover:shadow-2xl hover:shadow-primary/20 flex items-center justify-center gap-3 relative overflow-hidden">
-                            <span class="absolute inset-0 w-full h-full bg-primary/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></span>
-                            <span class="relative flex items-center gap-2">
-                                Send Message <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>
-                            </span>
-                        </button>
-                    </form>
-                </div>
-             </div>
+                    <button type="submit" class="w-full py-6 bg-black dark:bg-white text-white dark:text-black font-black text-xl rounded-2xl hover:bg-primary dark:hover:bg-primary dark:hover:text-black transition-all shadow-xl hover:shadow-primary/40 flex items-center justify-center gap-4 group/btn overflow-hidden relative">
+                        <div class="absolute inset-0 bg-primary/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
+                        <span class="relative z-10">Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="relative z-10 group-hover/btn:translate-x-2 transition-transform">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </main>
 
-<!-- Interactive FAQ Section -->
-<section class="py-24 bg-gray-50 dark:bg-card-dark relative overflow-hidden">
-    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <span class="text-primary font-bold tracking-widest uppercase mb-2 block">Common Questions</span>
-            <h2 class="text-4xl md:text-5xl font-black text-text-main dark:text-white">Frequently Asked</h2>
+<!-- FAQ Section -->
+<section class="py-24 bg-gray-50 dark:bg-[#080808] reveal">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <span class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-2 block">Support Center</span>
+            <h2 class="text-4xl md:text-6xl font-black text-text-main dark:text-white tracking-tighter">Frequently Asked <span class="text-primary italic">Questions</span></h2>
         </div>
 
-        <div class="max-w-3xl mx-auto space-y-4" id="faq-accordion">
-            <!-- FAQ Item 1 -->
-            <div class="bg-white dark:bg-black/20 rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="100">
-                <button class="w-full px-8 py-6 text-left flex items-center justify-between group focus:outline-none" onclick="toggleFaq(this)">
-                    <span class="text-lg font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">Do I need a reservation?</span>
-                    <span class="material-symbols-outlined transform transition-transform duration-300 text-gray-400 group-hover:text-primary">expand_more</span>
-                </button>
-                <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-50/50 dark:bg-white/5">
-                    <p class="px-8 pb-6 text-text-muted leading-relaxed">
-                        While walk-ins are welcome, we highly recommend making a reservation, especially for dinner service and weekends, to guarantee your table. You can book easily through our Reservation page.
-                    </p>
-                </div>
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- FAQ 1 -->
+            <div class="p-8 bg-white dark:bg-card-dark rounded-3xl border border-gray-100 dark:border-white/5 hover:border-primary/30 transition-all group">
+                <h3 class="text-xl font-black text-text-main dark:text-white mb-4 group-hover:text-primary transition-colors">Do I need a reservation?</h3>
+                <p class="text-text-muted leading-relaxed">While walk-ins are welcome, we recommend booking a table to ensure availability, especially during peak hours.</p>
             </div>
-
-            <!-- FAQ Item 2 -->
-            <div class="bg-white dark:bg-black/20 rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="200">
-                <button class="w-full px-8 py-6 text-left flex items-center justify-between group focus:outline-none" onclick="toggleFaq(this)">
-                    <span class="text-lg font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">Do you accommodate dietary restrictions?</span>
-                    <span class="material-symbols-outlined transform transition-transform duration-300 text-gray-400 group-hover:text-primary">expand_more</span>
-                </button>
-                <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-50/50 dark:bg-white/5">
-                    <p class="px-8 pb-6 text-text-muted leading-relaxed">
-                        Absolutely! Our menu features vegetarian, vegan, and gluten-free options. If you have severe allergies, please let your server know or include a note in your reservation.
-                    </p>
-                </div>
+            <!-- FAQ 2 -->
+            <div class="p-8 bg-white dark:bg-card-dark rounded-3xl border border-gray-100 dark:border-white/5 hover:border-primary/30 transition-all group">
+                <h3 class="text-xl font-black text-text-main dark:text-white mb-4 group-hover:text-primary transition-colors">Dietary restrictions?</h3>
+                <p class="text-text-muted leading-relaxed">Our menu clearly marks vegetarian, vegan, and gluten-free options. Let your server know about any severe allergies.</p>
             </div>
-
-            <!-- FAQ Item 3 -->
-            <div class="bg-white dark:bg-black/20 rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="300">
-                <button class="w-full px-8 py-6 text-left flex items-center justify-between group focus:outline-none" onclick="toggleFaq(this)">
-                    <span class="text-lg font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">Is there a dress code?</span>
-                    <span class="material-symbols-outlined transform transition-transform duration-300 text-gray-400 group-hover:text-primary">expand_more</span>
-                </button>
-                <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-50/50 dark:bg-white/5">
-                    <p class="px-8 pb-6 text-text-muted leading-relaxed">
-                        We encourage "Smart Casual" attire. We want you to feel comfortable but elegant. Baseball caps and beachwear are not permitted in the dining room.
-                    </p>
-                </div>
+            <!-- FAQ 3 -->
+            <div class="p-8 bg-white dark:bg-card-dark rounded-3xl border border-gray-100 dark:border-white/5 hover:border-primary/30 transition-all group">
+                <h3 class="text-xl font-black text-text-main dark:text-white mb-4 group-hover:text-primary transition-colors">Host private events?</h3>
+                <p class="text-text-muted leading-relaxed">Yes! We have dedicated spaces for parties, corporate events, and weddings. Contact us for custom packages.</p>
             </div>
-             <!-- FAQ Item 4 -->
-            <div class="bg-white dark:bg-black/20 rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="400">
-                <button class="w-full px-8 py-6 text-left flex items-center justify-between group focus:outline-none" onclick="toggleFaq(this)">
-                    <span class="text-lg font-bold text-text-main dark:text-white group-hover:text-primary transition-colors">Do you host private events?</span>
-                    <span class="material-symbols-outlined transform transition-transform duration-300 text-gray-400 group-hover:text-primary">expand_more</span>
-                </button>
-                <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-50/50 dark:bg-white/5">
-                    <p class="px-8 pb-6 text-text-muted leading-relaxed">
-                        Yes, we have a dedicated private dining area for up to 30 guests. For larger buyouts or special requests, please use the contact form above to reach our events team.
-                    </p>
-                </div>
+            <!-- FAQ 4 -->
+            <div class="p-8 bg-white dark:bg-card-dark rounded-3xl border border-gray-100 dark:border-white/5 hover:border-primary/30 transition-all group">
+                <h3 class="text-xl font-black text-text-main dark:text-white mb-4 group-hover:text-primary transition-colors">Delivery options?</h3>
+                <p class="text-text-muted leading-relaxed">We offer direct delivery through our website and are also available on major food delivery platforms.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Call to Action / Visit Info -->
-<section class="py-24 bg-zinc-900 relative overflow-hidden text-white">
-     <div class="absolute inset-0 z-0">
-        <img src="~/images/faq_bg.png" class="w-full h-full object-cover opacity-20" />
-        <div class="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-transparent"></div>
-    </div>
+<style>
+    .animate-slow-zoom { animation: slowZoom 20s infinite alternate ease-in-out; }
+    @@keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
     
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div class="md:w-1/2" data-aos="fade-right">
-                <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">Plan Your <br/><span class="text-primary">Visit Today</span></h2>
-                <p class="text-gray-300 text-lg mb-8 max-w-md">Experience the perfect blend of ambiance, service, and culinary excellence.</p>
-                
-                <div class="flex gap-4">
-                    <a href="/Reservation/Create" class="bg-primary hover:bg-white hover:text-black text-black font-bold py-4 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20">
-                        Book a Table
-                    </a>
-                    <a href="/Menu" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black font-bold py-4 px-8 rounded-full transition-all hover:scale-105 active:scale-95">
-                        View Menu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="md:w-1/2 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10" data-aos="fade-left">
-                <h3 class="text-2xl font-bold mb-6 flex items-center gap-2"><span class="material-symbols-outlined text-primary">schedule</span> Opening Hours</h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                        <span class="text-gray-300">Mon - Sun</span>
-                        <span class="font-bold">11:00 AM - 04:00 AM</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+    .animate-fade-in-up { animation: fadeInUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+    .animate-fade-in-down { animation: fadeInDown 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+    
+    @@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @@keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .animation-delay-300 { animation-delay: 300ms; }
+    .animation-delay-500 { animation-delay: 500ms; }
+
+    .animate-bounce-slow { animation: bounceSlow 3s infinite ease-in-out; }
+    @@keyframes bounceSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+</style>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 50
-        });
-
-        // Simple Parallax for Hero
-        document.addEventListener('scroll', function() {
-            const scroll = window.pageYOffset;
-            const heroBg = document.getElementById('contact-hero-bg');
-            if(heroBg) {
-                heroBg.style.transform = `translateY(${scroll * 0.4}px) scale(1.05)`;
-            }
-        });
-
-        // FAQ Accordion Logic
-        function toggleFaq(button) {
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('.material-symbols-outlined');
-            
-            // Toggle current
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                icon.style.transform = 'rotate(0deg)';
-                button.classList.remove('text-primary'); 
-            } else {
-                // Close others (optional - strictly one open at a time)
-                const allContents = document.querySelectorAll('#faq-accordion > div > div');
-                const allIcons = document.querySelectorAll('#faq-accordion .material-symbols-outlined');
-                const allButtons = document.querySelectorAll('#faq-accordion button');
-                
-                allContents.forEach(c => c.style.maxHeight = null);
-                allIcons.forEach(i => i.style.transform = 'rotate(0deg)');
-                allButtons.forEach(b => b.classList.remove('text-primary')); // Remove active color from other titles
-
-                content.style.maxHeight = content.scrollHeight + "px";
-                icon.style.transform = 'rotate(180deg)';
-                 button.querySelector('span:first-child').classList.add('text-primary'); // Highlight title
-            }
-        }
-        // Shaking Animation for Icons
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @@keyframes shake {
-                0%, 100% { transform: rotate(0deg); }
-                25% { transform: rotate(-10deg); }
-                75% { transform: rotate(10deg); }
-            }
-            .animate-shake {
-                animation: shake 0.5s ease-in-out;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // 3D Tilt Effect for Contact Cards
-        document.addEventListener('mousemove', function(e) {
-            const cards = document.querySelectorAll('.tilt-card');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                // Only animate if mouse is near/over the element to save resources
-                if (x > -50 && x < rect.width + 50 && y > -50 && y < rect.height + 50) {
-                     const centerX = rect.width / 2;
-                     const centerY = rect.height / 2;
-                     
-                     // Calculate rotation based on cursor position relative to center
-                     const rotateX = ((y - centerY) / centerY) * -5; // Max 5deg tilt
-                     const rotateY = ((x - centerX) / centerX) * 5;
-
-                     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                } else {
-                     card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
                 }
-                card.style.transition = 'transform 0.1s ease-out';
             });
-        });
+        }, { threshold: 0.15 });
 
-        // Reset tilt on mouse leave
-        document.querySelectorAll('.tilt-card').forEach(card => {
-            card.addEventListener('mouseleave', () => {
-                 card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-                 card.style.transition = 'transform 0.5s ease-out';
-            });
-        });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // Copy to Clipboard
-        function copyToClipboard(text, successText) {
-            navigator.clipboard.writeText(text).then(function() {
-                // Create toast
-                const toast = document.createElement('div');
-                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full shadow-2xl z-50 flex items-center gap-2 animate-fade-in-up';
-                toast.innerHTML = `<span class="material-symbols-outlined text-green-400">check_circle</span> ${successText}`;
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 500);
-                }, 3000);
-            });
+        function copyToClipboard(text, msg) {
+            navigator.clipboard.writeText(text);
+            alert(msg);
         }
     </script>
 }

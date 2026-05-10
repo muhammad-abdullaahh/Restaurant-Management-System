@@ -19,7 +19,6 @@ namespace FoodHeaven.Data
                     {
                         Username = "admin",
                         Email = "admin@foodheaven.com",
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin@123"),
                         PlainPassword = "admin@123",
                         FullName = "Admin User",
                         IsActive = true,
@@ -27,11 +26,10 @@ namespace FoodHeaven.Data
                     },
                     new Admin
                     {
-                        Username = "Muhammad Asad",
-                        Email = "asad.arshad@foodheaven.com",
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("asad.arshad"),
-                        PlainPassword = "asad.arshad",
-                        FullName = "Muhammad Asad",
+                        Username = "Asad",
+                        Email = "asad.spartan300@gmail.com",
+                        PlainPassword = "asad123",
+                        FullName = "Asad Khan",
                         IsActive = true,
                         CreatedAt = DateTime.Now
                     }
@@ -47,7 +45,6 @@ namespace FoodHeaven.Data
                     else
                     {
                         // Update password to ensure it matches requirement
-                        existingAdmin.PasswordHash = admin.PasswordHash;
                         existingAdmin.PlainPassword = admin.PlainPassword;
                         existingAdmin.FullName = admin.FullName;
                     }

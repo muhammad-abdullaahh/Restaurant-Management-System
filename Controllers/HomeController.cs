@@ -2,25 +2,37 @@ using Microsoft.AspNetCore.Mvc;
 using FoodHeaven.Data;
 using FoodHeaven.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FoodHeaven.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         public async Task<IActionResult> Index()
         {
-            var featuredItems = await _context.MenuItems
-                .Where(m => m.IsAvailable)
-                .OrderByDescending(m => m.Rating)
-                .Take(5)
-                .ToListAsync();
+            const string cacheKey = "FeaturedItems";
+
+            if (!_cache.TryGetValue(cacheKey, out List<MenuItem> featuredItems))
+            {
+                featuredItems = await _context.MenuItems
+                    .Where(m => m.IsAvailable)
+                    .OrderByDescending(m => m.Rating)
+                    .Take(5)
+                    .ToListAsync();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromHours(2));
+                _cache.Set(cacheKey, featuredItems, cacheOptions);
+            }
 
             ViewBag.FeaturedItems = featuredItems;
             return View();

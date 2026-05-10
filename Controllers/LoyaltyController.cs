@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using FoodHeaven.Data;
 using FoodHeaven.Models;
 using Microsoft.EntityFrameworkCore;
@@ -14,26 +15,35 @@ namespace FoodHeaven.Controllers
             _context = context;
         }
 
-        // GET: Loyalty/Index/{customerId}
-        public async Task<IActionResult> Index(string? customerId)
+        // GET: Loyalty/Index
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            // For demo purposes, using a default customer ID
-            customerId = customerId ?? "CUST-001";
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var customerId = $"USER-{userId}";
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var name = User.Identity?.Name ?? "Valued Customer";
 
             var loyaltyAccount = await _context.LoyaltyAccounts
-                .Include(l => l.Transactions.OrderByDescending(t => t.TransactionDate).Take(10))
+                .Include(l => l.Transactions)
                 .FirstOrDefaultAsync(l => l.CustomerId == customerId);
 
             if (loyaltyAccount == null)
             {
-                // Create a new account for demo
+                // Create a new account for the real user
                 loyaltyAccount = new LoyaltyAccount
                 {
                     CustomerId = customerId,
-                    CustomerName = "Demo Customer",
-                    Points = 1250,
-                    MembershipTier = "Gold",
-                    LunchPunchCount = 6,
+                    CustomerName = name,
+                    Email = email,
+                    Points = 0,
+                    MembershipTier = "Bronze",
+                    LunchPunchCount = 0,
                     CreatedAt = DateTime.Now,
                     LastActivityDate = DateTime.Now
                 };

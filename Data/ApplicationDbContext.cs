@@ -21,6 +21,12 @@ namespace FoodHeaven.Data
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<DailyStat> DailyStats { get; set; }
+        public DbSet<Deal> Deals { get; set; }
+        
+        // Database Triggers Logs
+        public DbSet<ReservationAudit> ReservationAudits { get; set; }
+        public DbSet<OrderAuditTrail> OrderAuditTrails { get; set; }
+        public DbSet<MenuItemAudit> MenuItemAudits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +65,16 @@ namespace FoodHeaven.Data
                 .Property(oi => oi.Price)
                 .HasPrecision(10, 2);
 
+            // Configure Triggers to prevent EF Core OUTPUT clause errors
+            modelBuilder.Entity<Reservation>()
+                .ToTable(tb => tb.HasTrigger("trg_Reservation_Audit"));
+            
+            modelBuilder.Entity<MenuItem>()
+                .ToTable(tb => tb.HasTrigger("trg_MenuItem_SoftDelete"));
+            
+            modelBuilder.Entity<Order>()
+                .ToTable(tb => tb.HasTrigger("trg_Orders_AutoStats"));
+
             // Seed initial data
             SeedData(modelBuilder);
         }
@@ -86,7 +102,7 @@ namespace FoodHeaven.Data
                     Description = "Atlantic salmon with lemon butter sauce and grilled asparagus.",
                     Price = 28.00m,
                     Category = "Mains",
-                    ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuDNrvAofLcEQx3a1ZXD2766HUT65ZwhGPi1k1AXhl64HEavGi8nxRyffeK2LQ1oxPd2l434Oa94YXAZT12CMqKjQTBF2Jb-8E5dAceM7FJUcelHF-6c4q15awtGEgO3PLu8mQM5UI5IuBTsZxo8YpUNEtR4k4Z2U6u_W2XctSp_0D7ecrWJK422mSw0xZv6oUUGBnX3XTr0Y3po6FEJ-BVMbMMnqK4FYYNU0u4RQkSQXKzN3eFrWYD2bhYIjwKQERuzO1vUb6O07Q",
+                    ImageUrl = "/images/platter_seafood.jpg",
                     Rating = 4.7,
                     ReviewCount = 85,
                     IsAvailable = true
@@ -122,7 +138,7 @@ namespace FoodHeaven.Data
                     Description = "Fresh basil, chili, garlic",
                     Price = 14.00m,
                     Category = "Mains",
-                    ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuDfWitYE4hwDczx9Z-VIscp8kFY3t1c7tJueP_sW0XkR6EW2YM0vC1M4_LrFzbnykXuUg7lmcsy1nz-rL4x03gJfzB9iXMzCFJtTORYym8uJDHJbCoEygHqUJcYT59qBjkpnS3np4Zwu_KX8k8v1wrgeaTcao1EbDmNjz-ij4cjZFHcM-yo-cJIeTFaj2BOvoxkNCp5lu566DDOVAcqyZHIolGrMV4W-f9hRXH5a9eBfPjt2axi-Nvk3uFpAfFKy36vLmF4e1HOPQ",
+                    ImageUrl = "/images/platter_italian.jpg",
                     Rating = 4.5,
                     ReviewCount = 67,
                     IsAvailable = true
@@ -146,7 +162,7 @@ namespace FoodHeaven.Data
                     Description = "Blueberry, banana, chia seeds",
                     Price = 9.50m,
                     Category = "Drinks",
-                    ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuB6wcyAKmNM9_xGQUed-hjbJioT5oPF1lfh6_YbyCXMg1W1ZmaCd888UKjOvluITeTAyZPMtsQLFPWIjDmcTA5L7-RIWceRR39xPbsEcpOodl0BlxDfLK7a83dW2hL-Qx5i1NIThF5cd7UWbJ-VPAHuHxYYpDg4vf7OvTOKGaOFEve1TWfFYLyjCXLKVbvORWtJXkb9sNMimTocvC86q0GPyCW192ZYAIMFQGCWGruiREfd_yXW2Sd6Szt5uHjg3W8cNgX14E-L_A",
+                    ImageUrl = "/images/berry_smoothie.jpg",
                     Rating = 4.7,
                     ReviewCount = 88,
                     IsAvailable = true
@@ -158,7 +174,7 @@ namespace FoodHeaven.Data
                     Description = "Quinoa, chickpeas, tahini",
                     Price = 11.00m,
                     Category = "Healthy",
-                    ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAOWTa96d3PDsIuBSmkXVzVmNNqgO6qTsZbDREDQrB5WGTILshF9ZltdJbzZgh2JmYs1b04ng6cxGTfbFaI6Ov9Sri1Kj1a5dbbTs-az4YbGwjlttdjz8EwCI7kfNvUrLK0lG7Sa8ZA_38oTTK34NMlzahtTxf8D1IJC5nDJTxZ36ZoDhEiiZJJ0JNaI0FaLiI_2YGLWW27ocmtwBl9atsG6F9G4toUYoKJWYWsPljAHz2nAT4qcw7o4AF4UVQeXiKuN2p4bh79zQ",
+                    ImageUrl = "/images/platter_health.jpg",
                     Rating = 4.6,
                     ReviewCount = 72,
                     IsAvailable = true
@@ -177,7 +193,131 @@ namespace FoodHeaven.Data
                 }
             );
 
-            // Seed default admin user (username: admin, password: Admin@123)
+            // Seed Deals
+            modelBuilder.Entity<Deal>().HasData(
+                new Deal
+                {
+                    Id = 1,
+                    Title = "Family Feast Bundle",
+                    Description = "2 Royal Wagyu Burgers, 2 Spicy Thai Basil Pastas, and 4 Berry Smoothies.",
+                    Price = 59.99m,
+                    OriginalPrice = 82.00m,
+                    ImageUrl = "/images/deals/family_feast.jpg",
+                    Tag = "Family Choice",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 2,
+                    Title = "Date Night Special",
+                    Description = "2 Truffle Risottos, 1 bottle of sparkling juice, and Fluffy Pancakes for two.",
+                    Price = 45.00m,
+                    OriginalPrice = 61.50m,
+                    ImageUrl = "/images/deals/date_night.jpg",
+                    Tag = "Popular",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 3,
+                    Title = "Healthy Morning Kick",
+                    Description = "Creamy Avocado Toast paired with a giant Berry Smoothie.",
+                    Price = 18.00m,
+                    OriginalPrice = 21.50m,
+                    ImageUrl = "/images/deals/healthy_morning.jpg",
+                    Tag = "Chef Special",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 4,
+                    Title = "BBQ Lovers Platter",
+                    Description = "Mixed grill selection, 4 pieces of Seekh Kabab, 4 Tikka pieces, and 2 Garlic Naans.",
+                    Price = 34.99m,
+                    OriginalPrice = 45.00m,
+                    ImageUrl = "/images/deals/bbq_lovers.jpg",
+                    Tag = "Hot Seller",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 5,
+                    Title = "Seafood Extravaganza",
+                    Description = "Grilled Salmon, Golden Calamari, and Prawn Cocktail with a side of herb butter rice.",
+                    Price = 49.99m,
+                    OriginalPrice = 65.00m,
+                    ImageUrl = "/images/deals/seafood_extravaganza.jpg",
+                    Tag = "Premium",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 6,
+                    Title = "Weekend Brunch for Two",
+                    Description = "2 Continental Breakfast platters, 2 Iced Coffees, and 1 Dessert sampler.",
+                    Price = 39.99m,
+                    OriginalPrice = 52.00m,
+                    ImageUrl = "/images/deals/weekend_brunch.jpg",
+                    Tag = "Weekend Only",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 7,
+                    Title = "Pasta Party Bundle",
+                    Description = "Choose any 3 Pasta dishes and get a large Garlic Bread Supreme for free.",
+                    Price = 42.00m,
+                    OriginalPrice = 55.00m,
+                    ImageUrl = "/images/deals/pasta_party.jpg",
+                    Tag = "Value Deal",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 8,
+                    Title = "Burger Madness",
+                    Description = "3 Classic Cheeseburgers, 3 Masala Fries, and 3 Coca Cola drinks.",
+                    Price = 29.99m,
+                    OriginalPrice = 38.00m,
+                    ImageUrl = "/images/deals/burger_madness.jpg",
+                    Tag = "Fast & Tasty",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 9,
+                    Title = "Sweet Tooth Combo",
+                    Description = "Molten Lava Cake, Triple Chocolate Cake, and 2 Vanilla Bean Ice Cream scoops.",
+                    Price = 22.00m,
+                    OriginalPrice = 28.50m,
+                    ImageUrl = "/images/deals/sweet_tooth.jpg",
+                    Tag = "Dessert King",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 10,
+                    Title = "Desi Royal Feast",
+                    Description = "Chicken Biryani (Full), Mutton Karahi (Half), 4 Roti/Naan, and a bottle of Coke (1.5L).",
+                    Price = 54.99m,
+                    OriginalPrice = 68.00m,
+                    ImageUrl = "/images/deals/desi_royal_feast.jpg",
+                    Tag = "Desi Special",
+                    IsActive = true
+                },
+                new Deal
+                {
+                    Id = 11,
+                    Title = "Pizza Party Pack",
+                    Description = "2 Large Pizzas of your choice, 1 portion of Chicken Wings (10pcs), and 1 large Salad bowl.",
+                    Price = 44.99m,
+                    OriginalPrice = 58.50m,
+                    ImageUrl = "/images/deals/pizza_party.jpg",
+                    Tag = "Party Time",
+                    IsActive = true
+                }
+            );
+
 
         }
     }

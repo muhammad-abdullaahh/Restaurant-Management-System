@@ -1,5 +1,6 @@
-using System.Net;
-using System.Net.Mail;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
@@ -26,10 +27,7 @@ namespace FoodHeaven.Services
             // Basic validation to ensure configuration is present
             if (string.IsNullOrEmpty(smtpServer) || string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                 // Handle missing config or throw exception, or log it. 
-                 // For now, we will simulate or just return if not configured to prevent crashes during dev without credentials.
-                 // However, the user asked for "accurate way", so throwing or logging error is better.
-                 System.Console.WriteLine("Email settings are missing. Email not sent.");
+                 System.Console.WriteLine("Email settings are missing in appsettings.json. Email not sent.");
                  return;
             }
 
@@ -39,22 +37,33 @@ namespace FoodHeaven.Services
                 int.TryParse(portString, out port);
             }
 
-            using (var client = new SmtpClient(smtpServer, port))
+            try 
             {
-                client.Credentials = new NetworkCredential(username, password);
-                client.EnableSsl = true;
+                var email = new MimeMessage();
+                email.From.Add(new MailboxAddress(senderName ?? senderEmail, senderEmail));
+                email.To.Add(MailboxAddress.Parse(toEmail));
+                email.Subject = subject;
 
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderEmail, senderName ?? senderEmail),
-                    Subject = subject,
-                    Body = message,
-                    IsBodyHtml = true
-                };
+                var builder = new BodyBuilder { HtmlBody = message };
+                email.Body = builder.ToMessageBody();
 
-                mailMessage.To.Add(toEmail);
-
-                await client.SendMailAsync(mailMessage);
+                using var smtp = new SmtpClient();
+                
+                // For Gmail port 587, use StartTls
+                // For port 465, use SslOnConnect
+                await smtp.ConnectAsync(smtpServer, port, SecureSocketOptions.StartTls);
+                
+                await smtp.AuthenticateAsync(username, password);
+                await smtp.SendAsync(email);
+                await smtp.DisconnectAsync(true);
+                
+                System.Console.WriteLine($"[EMAIL SUCCESS] Sent to: {toEmail}");
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine($"[EMAIL FAILURE] Error sending to {toEmail}: {ex.Message}");
+                // We re-throw to allow the calling controller's try-catch to handle it or log it
+                throw;
             }
         }
     }

@@ -28,19 +28,17 @@ namespace FoodHeaven.Controllers
                 }
                 return RedirectToAction("Index", "Menu");
             }
-            return View(); // Unified Login View
+            return View(); 
         }
 
-        // POST: Account/Login (Unified)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // 1. Check if it's an Admin
             var admin = await _context.Admins
                 .FirstOrDefaultAsync(a => (a.Username == username || a.Email == username) && a.IsActive);
 
-            if (admin != null && BCrypt.Net.BCrypt.Verify(password, admin.PasswordHash))
+            if (admin != null && password == admin.PlainPassword)
             {
                 admin.LastLoginAt = DateTime.Now;
                 await _context.SaveChangesAsync();
@@ -69,18 +67,14 @@ namespace FoodHeaven.Controllers
                 return RedirectToAction("Dashboard", "Admin");
             }
 
-            // 2. Check if it's a regular User (Login by Email)
-            // 2. Check if it's a regular User (Login by Email or Username)
-            // Handle duplicate names by checking all matches
             var potentialUsers = await _context.Users
                 .Where(u => u.Email == username || u.Username == username)
                 .ToListAsync();
 
-            var user = potentialUsers.FirstOrDefault(u => BCrypt.Net.BCrypt.Verify(password, u.PasswordHash));
+            var user = potentialUsers.FirstOrDefault(u => password == u.Password);
 
             if (user != null)
             {
-                // Update last login
                 user.LastLoginAt = DateTime.Now;
                 await _context.SaveChangesAsync();
 
@@ -121,7 +115,7 @@ namespace FoodHeaven.Controllers
              var admin = await _context.Admins
                 .FirstOrDefaultAsync(a => a.Username == username && a.IsActive);
 
-            if (admin != null && BCrypt.Net.BCrypt.Verify(password, admin.PasswordHash))
+            if (admin != null && password == admin.PlainPassword)
             {
                 admin.LastLoginAt = DateTime.Now;
                 await _context.SaveChangesAsync();
@@ -178,7 +172,6 @@ namespace FoodHeaven.Controllers
             {
                 Username = username,
                 Email = email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
                 Password = password,
                 CreatedAt = DateTime.Now
             };

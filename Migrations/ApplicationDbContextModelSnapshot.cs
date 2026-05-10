@@ -137,6 +137,183 @@ namespace FoodHeaven.Migrations
                     b.ToTable("DailyStats");
                 });
 
+            modelBuilder.Entity("FoodHeaven.Models.Deal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("OriginalPrice")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Deals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3143),
+                            Description = "2 Royal Wagyu Burgers, 2 Spicy Thai Basil Pastas, and 4 Berry Smoothies.",
+                            ImageUrl = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 82.00m,
+                            Price = 59.99m,
+                            Tag = "Family Choice",
+                            Title = "Family Feast Bundle"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3149),
+                            Description = "2 Truffle Risottos, 1 bottle of sparkling juice, and Fluffy Pancakes for two.",
+                            ImageUrl = "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 61.50m,
+                            Price = 45.00m,
+                            Tag = "Popular",
+                            Title = "Date Night Special"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3152),
+                            Description = "Creamy Avocado Toast paired with a giant Berry Smoothie.",
+                            ImageUrl = "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 21.50m,
+                            Price = 18.00m,
+                            Tag = "Chef Special",
+                            Title = "Healthy Morning Kick"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3154),
+                            Description = "Mixed grill selection, 4 pieces of Seekh Kabab, 4 Tikka pieces, and 2 Garlic Naans.",
+                            ImageUrl = "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 45.00m,
+                            Price = 34.99m,
+                            Tag = "Hot Seller",
+                            Title = "BBQ Lovers Platter"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3156),
+                            Description = "Grilled Salmon, Golden Calamari, and Prawn Cocktail with a side of herb butter rice.",
+                            ImageUrl = "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 65.00m,
+                            Price = 49.99m,
+                            Tag = "Premium",
+                            Title = "Seafood Extravaganza"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3158),
+                            Description = "2 Continental Breakfast platters, 2 Iced Coffees, and 1 Dessert sampler.",
+                            ImageUrl = "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 52.00m,
+                            Price = 39.99m,
+                            Tag = "Weekend Only",
+                            Title = "Weekend Brunch for Two"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3161),
+                            Description = "Choose any 3 Pasta dishes and get a large Garlic Bread Supreme for free.",
+                            ImageUrl = "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 55.00m,
+                            Price = 42.00m,
+                            Tag = "Value Deal",
+                            Title = "Pasta Party Bundle"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3163),
+                            Description = "3 Classic Cheeseburgers, 3 Masala Fries, and 3 Coca Cola drinks.",
+                            ImageUrl = "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 38.00m,
+                            Price = 29.99m,
+                            Tag = "Fast & Tasty",
+                            Title = "Burger Madness"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3165),
+                            Description = "Molten Lava Cake, Triple Chocolate Cake, and 2 Vanilla Bean Ice Cream scoops.",
+                            ImageUrl = "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 28.50m,
+                            Price = 22.00m,
+                            Tag = "Dessert King",
+                            Title = "Sweet Tooth Combo"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3167),
+                            Description = "Chicken Biryani (Full), Mutton Karahi (Half), 4 Roti/Naan, and a bottle of Coke (1.5L).",
+                            ImageUrl = "https://images.unsplash.com/photo-1517244683847-7456b63c5969?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 68.00m,
+                            Price = 54.99m,
+                            Tag = "Desi Special",
+                            Title = "Desi Royal Feast"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(3169),
+                            Description = "2 Large Pizzas of your choice, 1 portion of Chicken Wings (10pcs), and 1 large Salad bowl.",
+                            ImageUrl = "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80",
+                            IsActive = true,
+                            OriginalPrice = 58.50m,
+                            Price = 44.99m,
+                            Tag = "Party Time",
+                            Title = "Pizza Party Pack"
+                        });
+                });
+
             modelBuilder.Entity("FoodHeaven.Models.LoyaltyAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -268,7 +445,7 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 1,
                             Category = "Mains",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3692),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2907),
                             Description = "Creamy arborio rice with fresh black truffles and parmesan crisp.",
                             ImageUrl = "/images/truffle_risotto.png",
                             IsAvailable = true,
@@ -281,9 +458,9 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 2,
                             Category = "Mains",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3712),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2926),
                             Description = "Atlantic salmon with lemon butter sauce and grilled asparagus.",
-                            ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuDNrvAofLcEQx3a1ZXD2766HUT65ZwhGPi1k1AXhl64HEavGi8nxRyffeK2LQ1oxPd2l434Oa94YXAZT12CMqKjQTBF2Jb-8E5dAceM7FJUcelHF-6c4q15awtGEgO3PLu8mQM5UI5IuBTsZxo8YpUNEtR4k4Z2U6u_W2XctSp_0D7ecrWJK422mSw0xZv6oUUGBnX3XTr0Y3po6FEJ-BVMbMMnqK4FYYNU0u4RQkSQXKzN3eFrWYD2bhYIjwKQERuzO1vUb6O07Q",
+                            ImageUrl = "/images/platter_seafood.jpg",
                             IsAvailable = true,
                             Name = "Pan-Seared Salmon",
                             Price = 28.00m,
@@ -294,7 +471,7 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 3,
                             Category = "Mains",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3715),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2929),
                             Description = "Premium wagyu beef patty, aged cheddar, truffle mayo on brioche.",
                             ImageUrl = "/images/wagyu_burger.png",
                             IsAvailable = true,
@@ -307,7 +484,7 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 4,
                             Category = "Mains",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3716),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2931),
                             Description = "Wagyu beef with truffle oil",
                             ImageUrl = "/images/truffle_burger.png",
                             IsAvailable = true,
@@ -320,9 +497,9 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 5,
                             Category = "Mains",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3719),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2933),
                             Description = "Fresh basil, chili, garlic",
-                            ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuDfWitYE4hwDczx9Z-VIscp8kFY3t1c7tJueP_sW0XkR6EW2YM0vC1M4_LrFzbnykXuUg7lmcsy1nz-rL4x03gJfzB9iXMzCFJtTORYym8uJDHJbCoEygHqUJcYT59qBjkpnS3np4Zwu_KX8k8v1wrgeaTcao1EbDmNjz-ij4cjZFHcM-yo-cJIeTFaj2BOvoxkNCp5lu566DDOVAcqyZHIolGrMV4W-f9hRXH5a9eBfPjt2axi-Nvk3uFpAfFKy36vLmF4e1HOPQ",
+                            ImageUrl = "/images/platter_italian.jpg",
                             IsAvailable = true,
                             Name = "Spicy Thai Basil Pasta",
                             Price = 14.00m,
@@ -333,7 +510,7 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 6,
                             Category = "Starters",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3721),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2974),
                             Description = "Sourdough, lemon, chili flakes",
                             ImageUrl = "/images/avocado_toast.png",
                             IsAvailable = true,
@@ -346,9 +523,9 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 7,
                             Category = "Drinks",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3723),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2978),
                             Description = "Blueberry, banana, chia seeds",
-                            ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuB6wcyAKmNM9_xGQUed-hjbJioT5oPF1lfh6_YbyCXMg1W1ZmaCd888UKjOvluITeTAyZPMtsQLFPWIjDmcTA5L7-RIWceRR39xPbsEcpOodl0BlxDfLK7a83dW2hL-Qx5i1NIThF5cd7UWbJ-VPAHuHxYYpDg4vf7OvTOKGaOFEve1TWfFYLyjCXLKVbvORWtJXkb9sNMimTocvC86q0GPyCW192ZYAIMFQGCWGruiREfd_yXW2Sd6Szt5uHjg3W8cNgX14E-L_A",
+                            ImageUrl = "/images/berry_smoothie.jpg",
                             IsAvailable = true,
                             Name = "Berry Smoothie",
                             Price = 9.50m,
@@ -359,9 +536,9 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 8,
                             Category = "Healthy",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3725),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2980),
                             Description = "Quinoa, chickpeas, tahini",
-                            ImageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAOWTa96d3PDsIuBSmkXVzVmNNqgO6qTsZbDREDQrB5WGTILshF9ZltdJbzZgh2JmYs1b04ng6cxGTfbFaI6Ov9Sri1Kj1a5dbbTs-az4YbGwjlttdjz8EwCI7kfNvUrLK0lG7Sa8ZA_38oTTK34NMlzahtTxf8D1IJC5nDJTxZ36ZoDhEiiZJJ0JNaI0FaLiI_2YGLWW27ocmtwBl9atsG6F9G4toUYoKJWYWsPljAHz2nAT4qcw7o4AF4UVQeXiKuN2p4bh79zQ",
+                            ImageUrl = "/images/platter_health.jpg",
                             IsAvailable = true,
                             Name = "Buddha Bowl",
                             Price = 11.00m,
@@ -372,7 +549,7 @@ namespace FoodHeaven.Migrations
                         {
                             Id = 9,
                             Category = "Desserts",
-                            CreatedAt = new DateTime(2026, 1, 23, 20, 42, 47, 899, DateTimeKind.Local).AddTicks(3727),
+                            CreatedAt = new DateTime(2026, 5, 5, 16, 2, 50, 847, DateTimeKind.Local).AddTicks(2983),
                             Description = "Maple syrup, fresh berries",
                             ImageUrl = "/images/fluffy_pancakes.png",
                             IsAvailable = true,
@@ -545,7 +722,12 @@ namespace FoodHeaven.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -643,6 +825,15 @@ namespace FoodHeaven.Migrations
                     b.Navigation("MenuItem");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("FoodHeaven.Models.Reservation", b =>
+                {
+                    b.HasOne("FoodHeaven.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FoodHeaven.Models.LoyaltyAccount", b =>

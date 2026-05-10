@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+
+// Add Memory Cache
+builder.Services.AddMemoryCache();
 
 // Add Database Context
 // Database Configuration
@@ -115,6 +119,13 @@ using (var scope = app.Services.CreateScope())
     try
     {
         await SeedAdmins.Initialize(services);
+        
+        // Disable Identity Cache to prevent ID jumping (Fixes 1 -> 1001 issue)
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        if (context.Database.IsSqlServer())
+        {
+            await context.Database.ExecuteSqlRawAsync("IF EXISTS (SELECT * FROM sys.databases WHERE name = 'FoodHeavenDb') ALTER DATABASE SCOPED CONFIGURATION SET IDENTITY_CACHE = OFF;");
+        }
     }
     catch (Exception ex)
     {

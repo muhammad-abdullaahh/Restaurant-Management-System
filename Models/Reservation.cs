@@ -45,5 +45,8 @@ namespace FoodHeaven.Models
         public bool IsPremiumTable { get; set; } = false;
         
         public decimal EstimatedCost { get; set; } = 0;
+        
+        public int? UserId { get; set; }
+        public User? User { get; set; }
     }
 }
